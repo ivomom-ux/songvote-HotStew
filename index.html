@@ -205,6 +205,19 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
   </div>
 </div>
 
+<!-- WHATSAPP MODAL -->
+<div class="overlay" id="modal-whatsapp" style="display:none">
+  <div class="modal wide">
+    <div class="modal-title">📋 WhatsApp lijst</div>
+    <div class="modal-sub">Kopieer en plak dit in jullie WhatsApp-groep.</div>
+    <textarea id="whatsapp-text" rows="14" style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:12px;color:var(--text);font-size:13px;line-height:1.6;resize:vertical" readonly></textarea>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="btn-whatsapp-close">Sluiten</button>
+      <button class="btn-primary" id="btn-whatsapp-copy">📋 Kopieer</button>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header id="site-header">
   <div class="header-inner">
@@ -246,8 +259,9 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
   <div class="section-head">
     <div class="section-title">Voorgestelde Nummers</div>
     <div class="controls">
-      <button class="io-btn" id="btn-import">⬆ Import</button>
-      <button class="io-btn" id="btn-export">⬇ Export</button>
+      <button class="io-btn" id="btn-import" style="display:none">⬆ Import JSON</button>
+      <button class="io-btn" id="btn-export" style="display:none">⬇ Export JSON</button>
+      <button class="io-btn" id="btn-whatsapp">📋 WhatsApp lijst</button>
       <input type="file" id="file-import" accept=".json" style="display:none"/>
       <div class="pill-group">
         <button class="pill on" data-sort="popularity">Populariteit</button>
@@ -270,8 +284,9 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
 
 <script>
 /* ── CONFIG ── Pas dit aan! ──────────────────────── */
-const DBX_APP_KEY   = 'm658uto0la29462';   // ← stap 4 in de README
-const DBX_FILE_PATH = '/songvote_hotstew.json.json';  // pad in Dropbox
+const DBX_APP_KEY   = 'JOUW_APP_KEY_HIER';   // ← stap 4 in de README
+const DBX_FILE_PATH = '/songvote_data.json';  // pad in Dropbox
+const ADMIN_USER    = 'Jan';                  // ← naam van de beheerder (JSON import/export)
 /* ─────────────────────────────────────────────── */
 
 let songs       = [];
@@ -382,7 +397,7 @@ function setUser(name){
   currentUser=name;
   try{localStorage.setItem('sv_user',name);}catch{}
   document.getElementById('modal-user').style.display='none';
-  renderHeader();renderSongs();
+  renderHeader();updateAdminControls();renderSongs();
 }
 function changeUser(){
   const n=(prompt('Nieuwe naam:',currentUser)||'').trim();
@@ -504,7 +519,14 @@ document.querySelectorAll('[data-order]').forEach(b=>b.onclick=()=>{
   renderSongs();
 });
 
-/* ── IMPORT / EXPORT ───────────────────────────── */
+/* ── ADMIN CHECK ───────────────────────────────── */
+function updateAdminControls(){
+  const isAdmin = currentUser && currentUser.trim().toLowerCase() === ADMIN_USER.trim().toLowerCase();
+  document.getElementById('btn-import').style.display = isAdmin ? 'inline-flex' : 'none';
+  document.getElementById('btn-export').style.display = isAdmin ? 'inline-flex' : 'none';
+}
+
+/* ── IMPORT / EXPORT (admin only) ─────────────── */
 document.getElementById('btn-export').onclick=()=>{
   const blob=new Blob([JSON.stringify(songs,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
@@ -520,6 +542,33 @@ document.getElementById('file-import').onchange=e=>{
     catch{toast('Kon bestand niet lezen','err');}
   };
   r.readAsText(f);e.target.value='';
+};
+
+/* ── WHATSAPP EXPORT (iedereen) ────────────────── */
+function buildWhatsAppText(){
+  const sorted=[...songs].sort((a,b)=>(b.upvotes-b.downvotes)-(a.upvotes-a.downvotes));
+  const date=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+  let txt=`🎸 *SongVote lijst* — ${date}\n\n`;
+  sorted.forEach((s,i)=>{
+    txt+=`${i+1}. 🎵 *${s.title}*\n`;
+    txt+=`    ${s.artist}\n`;
+    txt+=`    👍 ${s.upvotes}  👎 ${s.downvotes}\n\n`;
+  });
+  txt+=`_${sorted.length} nummer${sorted.length!==1?'s':''} voorgesteld_`;
+  return txt;
+}
+document.getElementById('btn-whatsapp').onclick=()=>{
+  document.getElementById('whatsapp-text').value=buildWhatsAppText();
+  document.getElementById('modal-whatsapp').style.display='flex';
+};
+document.getElementById('btn-whatsapp-close').onclick=()=>{
+  document.getElementById('modal-whatsapp').style.display='none';
+};
+document.getElementById('btn-whatsapp-copy').onclick=()=>{
+  const ta=document.getElementById('whatsapp-text');
+  navigator.clipboard.writeText(ta.value).then(()=>toast('Gekopieerd! 🎉')).catch(()=>{
+    ta.select();document.execCommand('copy');toast('Gekopieerd!');
+  });
 };
 
 /* ── RENDER ────────────────────────────────────── */
@@ -600,6 +649,7 @@ async function init(){
   }
 
   renderHeader();
+  updateAdminControls();
   if(dbxToken)await dbxLoad();
   renderSongs();
 }
