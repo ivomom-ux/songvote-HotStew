@@ -1,779 +1,152 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>SongVote 🎸</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0a0a0f;--s1:#111118;--s2:#18181f;--s3:#202028;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
-  --accent:#ff3c5f;--accent-dim:rgba(255,60,95,0.12);
-  --gold:#f5a623;--green:#00c896;--green-dim:rgba(0,200,150,0.1);
-  --text:#e4e4ee;--muted:#5a5a72;--muted2:#7a7a90;
-  --font-d:'Archivo Black',sans-serif;--font-b:'Outfit',sans-serif;
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
-button{cursor:pointer;font-family:inherit}input,textarea{font-family:inherit}a{color:inherit;text-decoration:none}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");}
-#app{position:relative;z-index:1}
-.wrap{max-width:880px;margin:0 auto;padding:0 18px}
-
-/* ── HEADER ── */
-#site-header{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
-.header-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;max-width:880px;margin:0 auto;flex-wrap:wrap;}
-.logo{font-family:var(--font-d);font-size:28px;color:#fff;letter-spacing:1px;line-height:1}
-.logo em{color:var(--accent);font-style:normal}
-.tagline{font-size:11px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-top:1px}
-.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.user-chip{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border2);border-radius:99px;padding:5px 14px 5px 8px;}
-.user-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px var(--green)}
-.user-chip-name{font-size:13px;font-weight:600;color:#fff}
-.btn-change{background:none;border:none;font-size:11px;color:var(--muted);text-decoration:underline;padding:0 0 0 4px}
-.btn-change:hover{color:var(--text)}
-.sync-chip{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);padding:5px 10px;background:var(--s2);border:1px solid var(--border);border-radius:99px;}
-.sync-chip.saving{color:var(--gold);border-color:rgba(245,166,35,.3)}
-.sync-chip.saved{color:var(--green);border-color:rgba(0,200,150,.3)}
-.sync-chip.error{color:var(--accent);border-color:rgba(255,60,95,.3)}
-
-/* ── SYNC BAR ── */
-#sync-bar{background:rgba(0,200,150,.07);border-bottom:1px solid rgba(0,200,150,.15);padding:5px 18px;font-size:12px;color:#00c896;display:none;align-items:center;gap:8px;}
-.spin{display:inline-block;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── MODALS ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:200;padding:18px;backdrop-filter:blur(6px);}
-.modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:32px;width:100%;max-width:460px;box-shadow:0 32px 80px rgba(0,0,0,.65);animation:pop .25s cubic-bezier(.34,1.56,.64,1);}
-.modal.wide{max-width:540px}
-@keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}}
-.modal-title{font-family:var(--font-d);font-size:26px;color:#fff;margin-bottom:6px}
-.modal-sub{font-size:14px;color:var(--muted);margin-bottom:22px;line-height:1.5}
-.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
-
-/* ── FORM ELEMENTS ── */
-.field{margin-bottom:14px}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
-.field input[type=text],.field input[type=url],.field textarea{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;color:var(--text);font-size:14px;transition:.15s;}
-.field input:focus,.field textarea:focus{outline:none;border-color:rgba(255,60,95,.5);box-shadow:0 0 0 3px rgba(255,60,95,.09);}
-.field textarea{resize:vertical;min-height:70px;line-height:1.5}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.link-row{display:flex;gap:7px;margin-bottom:6px}
-.link-row input{flex:1}
-.btn-rm{background:var(--s3);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:0 12px;font-size:17px;transition:.15s;}
-.btn-rm:hover{color:var(--accent)}
-.btn-addlink{background:none;border:none;color:var(--accent);font-size:13px;padding:2px 0;margin-top:2px}
-.btn-addlink:hover{color:var(--gold)}
-.field-error{color:var(--accent);font-size:12px;margin-top:5px}
-
-/* ── BUTTONS ── */
-.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 22px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.15s;letter-spacing:.2px;}
-.btn-primary:hover{filter:brightness(1.12);transform:translateY(-1px)}
-.btn-primary:active{transform:translateY(0)}
-.btn-secondary{background:var(--s3);color:var(--text);border:1px solid var(--border2);border-radius:9px;padding:9px 18px;font-size:14px;transition:.15s;}
-.btn-secondary:hover{background:var(--s2)}
-
-/* ── FORM CARD ── */
-.form-card{background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:16px;padding:26px;margin-bottom:40px;}
-.form-card-title{font-family:var(--font-d);font-size:20px;color:#fff;margin-bottom:20px}
-.form-footer-row{display:flex;justify-content:flex-end;margin-top:6px}
-
-/* ── SECTION HEADER ── */
-.section-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:28px 0 18px;border-top:1px solid var(--border);}
-.section-title{font-family:var(--font-d);font-size:22px;color:#fff}
-.controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.pill-group{display:flex;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:3px;gap:2px;}
-.pill{background:none;border:none;color:var(--muted);padding:5px 12px;border-radius:6px;font-size:13px;transition:.15s}
-.pill.on{background:var(--accent);color:#fff}
-.io-btn{background:var(--s2);border:1px solid var(--border);color:var(--muted2);border-radius:8px;padding:6px 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px;transition:.15s;}
-.io-btn:hover{background:var(--s3);color:var(--text)}
-
-/* ── SONG CARDS ── */
-#songs-list{display:flex;flex-direction:column;gap:12px}
-.song-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s,transform .15s;}
-.song-card:hover{border-color:rgba(255,60,95,.2);transform:translateY(-1px)}
-.song-main{display:flex}
-.song-thumb{width:96px;min-height:84px;flex-shrink:0;background:var(--s3);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.song-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-.song-card:hover .song-thumb img{transform:scale(1.07)}
-.song-thumb .no-art{font-size:28px;color:var(--muted)}
-.song-body{flex:1;padding:14px 16px;min-width:0}
-.song-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.song-meta{min-width:0}
-.song-title{font-size:15px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.song-artist{font-size:13px;color:var(--muted2)}
-.song-by{font-size:12px;color:var(--muted);margin-top:3px}
-.song-by strong{color:var(--muted2)}
-.card-actions{display:flex;gap:2px;flex-shrink:0}
-.icon-btn{background:none;border:none;color:var(--muted);padding:5px;border-radius:6px;font-size:15px;transition:.15s;line-height:1}
-.icon-btn:hover.edit{color:var(--gold)}.icon-btn:hover.del{color:var(--accent)}
-.song-links{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
-.link-pill{display:inline-flex;align-items:center;gap:4px;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--muted2);transition:.15s;}
-.link-pill:hover{background:var(--accent);color:#fff;border-color:transparent}
-.song-quote{font-size:13px;color:var(--muted2);margin-top:8px;font-style:italic;border-left:2px solid var(--accent);padding-left:8px;line-height:1.4;}
-
-/* ── SONG FOOTER ── */
-.song-foot{background:rgba(0,0,0,.22);padding:9px 14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.votes{display:flex;align-items:center;gap:10px}
-.vote-btn{background:none;border:none;color:var(--muted);display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;border-radius:6px;transition:.15s;}
-.vote-btn.up:hover,.vote-btn.voted-up{background:var(--green-dim);color:var(--green)}
-.vote-btn.down:hover,.vote-btn.voted-down{background:var(--accent-dim);color:var(--accent)}
-.score{font-size:15px;font-weight:700;min-width:24px;text-align:center}
-.score.pos{color:var(--green)}.score.neg{color:var(--accent)}.score.neu{color:var(--muted)}
-.cmnt-toggle{background:none;border:none;color:var(--muted);display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 9px;border-radius:6px;transition:.15s;}
-.cmnt-toggle:hover{background:var(--s3);color:var(--text)}
-
-/* ── COMMENTS ── */
-.cmnt-section{padding:13px 16px;border-top:1px solid var(--border);background:rgba(0,0,0,.15)}
-.cmnt-list{max-height:140px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:5px}
-.cmnt-list::-webkit-scrollbar{width:3px}.cmnt-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.cmnt-item{background:var(--s3);border-radius:7px;padding:6px 10px;font-size:13px;color:var(--text)}
-.cmnt-author{font-weight:600;color:var(--gold);margin-right:5px;font-size:12px}
-.cmnt-empty{font-size:13px;color:var(--muted);font-style:italic}
-.cmnt-form{display:flex;gap:7px;margin-top:4px}
-.cmnt-form input{flex:1;background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-size:13px;}
-.cmnt-form input:focus{outline:none;border-color:rgba(255,60,95,.4)}
-.cmnt-submit{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;transition:.15s;}
-.cmnt-submit:hover{filter:brightness(1.1)}
-
-/* ── VOTE DETAILS ── */
-.vote-details{padding:8px 14px 10px;border-top:1px solid var(--border);background:rgba(0,0,0,.1);display:flex;gap:16px;flex-wrap:wrap;}
-.vote-group{display:flex;flex-direction:column;gap:4px;min-width:120px;}
-.vote-group-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px}
-.vote-name{font-size:12px;color:var(--text);display:flex;align-items:center;gap:4px}
-.vote-name.up{color:var(--green)}.vote-name.down{color:var(--accent)}
-
-/* ── USER MANAGEMENT MODAL ── */
-.user-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--s3);border-radius:8px;margin-bottom:6px;}
-.user-row-name{font-size:14px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:8px}
-.user-tag{font-size:10px;background:var(--accent);color:#fff;border-radius:4px;padding:1px 6px;font-weight:600}
-.btn-del-user{background:none;border:none;color:var(--muted);font-size:18px;padding:2px 6px;border-radius:6px;transition:.15s;line-height:1}
-.btn-del-user:hover{color:var(--accent);background:var(--accent-dim)}
-
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:56px 24px;border:2px dashed var(--border2);border-radius:16px;}
-.empty .e-icon{font-size:44px;margin-bottom:12px}
-.empty h3{font-family:var(--font-d);font-size:20px;color:var(--muted);letter-spacing:.5px}
-.empty p{font-size:14px;color:var(--muted);margin-top:6px}
-
-/* ── TOAST ── */
-#toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--s2);border:1px solid var(--border2);border-radius:11px;padding:11px 18px;font-size:14px;box-shadow:0 10px 28px rgba(0,0,0,.45);transform:translateY(70px);opacity:0;transition:.3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
-#toast.show{transform:translateY(0);opacity:1}
-#toast.ok{border-color:rgba(0,200,150,.3);color:var(--green)}
-#toast.err{border-color:rgba(255,60,95,.3);color:var(--accent)}
-#toast.info{border-color:rgba(122,180,255,.3);color:#7ab4ff}
-
-footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
-
-@media(max-width:520px){
-  .two-col{grid-template-columns:1fr}
-  .song-thumb{width:72px}
-  .header-inner{padding:10px 14px}
-}
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SongVote 🎸</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <div id="app">
 
-<!-- USER MODAL -->
-<div class="overlay" id="modal-user">
-  <div class="modal">
-    <div class="modal-title">Welkom bij SongVote 🎸</div>
-    <div class="modal-sub">Voer je naam in zodat de band weet wie wat voorstelt en stemt.</div>
-    <div class="field">
-      <label for="inp-name">Jouw naam</label>
-      <input type="text" id="inp-name" placeholder="bv. Jan" autocomplete="off"/>
-      <p class="field-error" id="inp-name-err" style="display:none"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-primary" id="btn-set-user">Opslaan en doorgaan →</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT MODAL -->
-<div class="overlay" id="modal-edit" style="display:none">
-  <div class="modal wide">
-    <div class="modal-title">Nummer bewerken</div>
-    <div class="two-col">
-      <div class="field"><label>Titel</label><input type="text" id="edit-title"/></div>
-      <div class="field"><label>Artiest</label><input type="text" id="edit-artist"/></div>
-    </div>
-    <div class="field">
-      <label>Links</label>
-      <div id="edit-links-wrap"></div>
-      <button class="btn-addlink" id="btn-edit-addlink">+ link toevoegen</button>
-    </div>
-    <div class="field"><label>Toelichting</label><textarea id="edit-comment" rows="3"></textarea></div>
-    <p class="field-error" id="edit-err" style="display:none"></p>
-    <div class="modal-footer">
-      <button class="btn-secondary" id="btn-edit-cancel">Annuleren</button>
-      <button class="btn-primary" id="btn-edit-save">Opslaan</button>
-    </div>
-  </div>
-</div>
-
-<!-- USERS MODAL -->
-<div class="overlay" id="modal-users" style="display:none">
-  <div class="modal wide">
-    <div class="modal-title">👥 Gebruikers beheren</div>
-    <div class="modal-sub">Verwijder een gebruiker inclusief al zijn stemmen en reacties.</div>
-    <div id="users-list"></div>
-    <div class="modal-footer">
-      <button class="btn-secondary" id="btn-users-close">Sluiten</button>
-    </div>
-  </div>
-</div>
-
-<!-- WHATSAPP MODAL -->
-<div class="overlay" id="modal-whatsapp" style="display:none">
-  <div class="modal wide">
-    <div class="modal-title">📋 WhatsApp lijst</div>
-    <div class="modal-sub">Kopieer en plak dit in jullie WhatsApp-groep.</div>
-    <textarea id="whatsapp-text" rows="14" style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:12px;color:var(--text);font-size:13px;line-height:1.6;resize:vertical" readonly></textarea>
-    <div class="modal-footer">
-      <button class="btn-secondary" id="btn-whatsapp-close">Sluiten</button>
-      <button class="btn-primary" id="btn-whatsapp-copy">📋 Kopieer</button>
-    </div>
-  </div>
-</div>
-
-<!-- HEADER -->
-<header id="site-header">
-  <div class="header-inner">
-    <div>
-      <div class="logo">Song<em>Vote</em></div>
-      <div class="tagline">Stel voor · Stem · Discussieer</div>
-    </div>
-    <div class="header-right" id="header-right"></div>
-  </div>
-</header>
-
-<!-- SYNC BAR -->
-<div id="sync-bar"><span class="spin">⟳</span><span id="sync-msg">Laden…</span></div>
-
-<!-- MAIN -->
-<main class="wrap" style="padding-top:30px;padding-bottom:20px">
-
-  <div class="form-card">
-    <div class="form-card-title">Stel een nummer voor</div>
-    <div class="two-col">
-      <div class="field"><label>Titel</label><input type="text" id="new-title" placeholder="bv. Bohemian Rhapsody"/></div>
-      <div class="field"><label>Artiest</label><input type="text" id="new-artist" placeholder="bv. Queen"/></div>
-    </div>
-    <div class="field">
-      <label>Links <span style="text-transform:none;font-weight:400">(YouTube, Spotify, …)</span></label>
-      <div id="new-links-wrap"><div class="link-row"><input type="url" placeholder="https://…"/></div></div>
-      <button class="btn-addlink" id="btn-new-addlink">+ link toevoegen</button>
-    </div>
-    <div class="field">
-      <label>Toelichting <span style="text-transform:none;font-weight:400">(optioneel)</span></label>
-      <textarea id="new-comment" placeholder="Waarom moeten we dit nummer spelen?"></textarea>
-    </div>
-    <p class="field-error" id="new-err" style="display:none"></p>
-    <div class="form-footer-row">
-      <button class="btn-primary" id="btn-add-song">＋ Voeg nummer toe</button>
-    </div>
-  </div>
-
-  <div class="section-head">
-    <div class="section-title">Voorgestelde Nummers</div>
-    <div class="controls">
-      <button class="io-btn" id="btn-import" style="display:none">⬆ Import JSON</button>
-      <button class="io-btn" id="btn-export" style="display:none">⬇ Export JSON</button>
-      <button class="io-btn" id="btn-manage-users" style="display:none">👥 Gebruikers</button>
-      <button class="io-btn" id="btn-whatsapp">📋 WhatsApp lijst</button>
-      <input type="file" id="file-import" accept=".json" style="display:none"/>
-      <div class="pill-group">
-        <button class="pill on" data-sort="popularity">Populariteit</button>
-        <button class="pill" data-sort="title">Titel</button>
+  <!-- ── USER MODAL ── -->
+  <div class="overlay" id="modal-user">
+    <div class="modal">
+      <div class="modal-title">Welkom bij SongVote 🎸</div>
+      <div class="modal-sub">Voer je naam in zodat de band weet wie wat voorstelt en stemt.</div>
+      <div class="field">
+        <label for="inp-name">Jouw naam</label>
+        <input type="text" id="inp-name" placeholder="bv. Jan" autocomplete="off"/>
+        <p class="field-error" id="inp-name-err" style="display:none"></p>
       </div>
-      <div class="pill-group">
-        <button class="pill on" data-order="desc">↓</button>
-        <button class="pill" data-order="asc">↑</button>
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-set-user">Opslaan en doorgaan →</button>
       </div>
     </div>
   </div>
 
-  <div id="songs-list"></div>
-</main>
+  <!-- ── EDIT MODAL ── -->
+  <div class="overlay" id="modal-edit" style="display:none">
+    <div class="modal wide">
+      <div class="modal-title">Nummer bewerken</div>
+      <div class="two-col">
+        <div class="field"><label>Titel</label><input type="text" id="edit-title"/></div>
+        <div class="field"><label>Artiest</label><input type="text" id="edit-artist"/></div>
+      </div>
+      <div class="field">
+        <label>Links</label>
+        <div id="edit-links-wrap"></div>
+        <button class="btn-addlink" id="btn-edit-addlink">+ link toevoegen</button>
+      </div>
+      <div class="field"><label>Toelichting</label><textarea id="edit-comment" rows="3"></textarea></div>
+      <p class="field-error" id="edit-err" style="display:none"></p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-edit-cancel">Annuleren</button>
+        <button class="btn-primary" id="btn-edit-save">Opslaan</button>
+      </div>
+    </div>
+  </div>
 
-<footer>SongVote · Data opgeslagen in GitHub 🐙</footer>
+  <!-- ── USERS MODAL ── -->
+  <div class="overlay" id="modal-users" style="display:none">
+    <div class="modal wide">
+      <div class="modal-title">👥 Gebruikers beheren</div>
+      <div class="modal-sub">Verwijder een gebruiker inclusief al zijn stemmen, reacties en voorgestelde nummers.</div>
+      <div id="users-list"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-users-close">Sluiten</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WHATSAPP MODAL ── -->
+  <div class="overlay" id="modal-whatsapp" style="display:none">
+    <div class="modal wide">
+      <div class="modal-title">📋 WhatsApp lijst</div>
+      <div class="modal-sub">Kopieer en plak dit in jullie WhatsApp-groep.</div>
+      <textarea id="whatsapp-text" rows="14" style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:12px;color:var(--text);font-size:13px;line-height:1.6;resize:vertical" readonly></textarea>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-whatsapp-close">Sluiten</button>
+        <button class="btn-primary" id="btn-whatsapp-copy">📋 Kopieer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header id="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="logo">Song<em>Vote</em></div>
+        <div class="tagline">Stel voor · Stem · Discussieer</div>
+      </div>
+      <div class="header-right" id="header-right"></div>
+    </div>
+  </header>
+
+  <!-- ── SYNC BAR ── -->
+  <div id="sync-bar">
+    <span class="spin">⟳</span>
+    <span id="sync-msg">Laden…</span>
+  </div>
+
+  <!-- ── MAIN ── -->
+  <main class="wrap" style="padding-top:30px;padding-bottom:20px">
+
+    <!-- Nummer toevoegen -->
+    <div class="form-card">
+      <div class="form-card-title">Stel een nummer voor</div>
+      <div class="two-col">
+        <div class="field"><label>Titel</label><input type="text" id="new-title" placeholder="bv. Bohemian Rhapsody"/></div>
+        <div class="field"><label>Artiest</label><input type="text" id="new-artist" placeholder="bv. Queen"/></div>
+      </div>
+      <div class="field">
+        <label>Links <span style="text-transform:none;font-weight:400">(YouTube, Spotify, …)</span></label>
+        <div id="new-links-wrap"><div class="link-row"><input type="url" placeholder="https://…"/></div></div>
+        <button class="btn-addlink" id="btn-new-addlink">+ link toevoegen</button>
+      </div>
+      <div class="field">
+        <label>Toelichting <span style="text-transform:none;font-weight:400">(optioneel)</span></label>
+        <textarea id="new-comment" placeholder="Waarom moeten we dit nummer spelen?"></textarea>
+      </div>
+      <p class="field-error" id="new-err" style="display:none"></p>
+      <div class="form-footer-row">
+        <button class="btn-primary" id="btn-add-song">＋ Voeg nummer toe</button>
+      </div>
+    </div>
+
+    <!-- Nummers lijst -->
+    <div class="section-head">
+      <div class="section-title">Voorgestelde Nummers</div>
+      <div class="controls">
+        <button class="io-btn" id="btn-import"       style="display:none">⬆ Import JSON</button>
+        <button class="io-btn" id="btn-export"       style="display:none">⬇ Export JSON</button>
+        <button class="io-btn" id="btn-manage-users" style="display:none">👥 Gebruikers</button>
+        <button class="io-btn" id="btn-whatsapp">📋 WhatsApp lijst</button>
+        <input type="file" id="file-import" accept=".json" style="display:none"/>
+        <div class="pill-group">
+          <button class="pill on" data-sort="popularity">Populariteit</button>
+          <button class="pill"    data-sort="title">Titel</button>
+        </div>
+        <div class="pill-group">
+          <button class="pill on" data-order="desc">↓</button>
+          <button class="pill"    data-order="asc">↑</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="songs-list"></div>
+  </main>
+
+  <footer>SongVote · Data opgeslagen in GitHub 🐙</footer>
 </div>
 
 <div id="toast"></div>
 
-<script>
-/* ═══════════════════════════════════════════════════
-   ⚙️  CONFIG — vul dit in!
-═══════════════════════════════════════════════════ */
-const GH_OWNER      = 'ivomom-ux';  // ← bv. 'jandevries'
-const GH_REPO       = 'songvote-HotStew';         // ← bv. 'songvote-hotstew'
-const GH_TOKEN      = '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';            // ← Personal Access Token
-const GH_DATA_FILE  = 'songvote_data.json.json';           // bestandsnaam in de repo
-const ADMIN_USER    = 'Ivo - trombone';                           // naam van de beheerder
-/* ═══════════════════════════════════════════════════ */
+<!-- config.js moet voor app.js geladen worden -->
+<script src="config.js"></script>
+<script src="app.js"></script>
 
-/*
-  DATA STRUCTUUR
-  --------------
-  JSON bevat een object met twee velden:
-  {
-    users: { uid: displayName, ... },   ← gebruikersregister
-    songs: [ { ...song, votes: { uid: 'up'|'down'|null }, comments: [{uid, text}] } ]
-  }
-
-  Oude JSON (array zonder users) wordt automatisch gemigreerd.
-*/
-
-let songs      = [];
-let users      = {};   // { uid: name }
-let sortBy     = 'popularity';
-let sortOrder  = 'desc';
-let currentUid = null;  // eigen uid
-let editingId  = null;
-let saveTimer  = null;
-let isSaving   = false;
-const cmntOpen = {};
-const voteOpen = {};
-
-/* ── HELPERS ───────────────────────────────────── */
-function genUid(){
-  return Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,6);
-}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function myName(){return users[currentUid]||'?';}
-function nameOf(uid){return users[uid]||uid||'?';}
-function isAdmin(){return myName().trim().toLowerCase()===ADMIN_USER.trim().toLowerCase();}
-function isOwner(s){return s.suggesterUid===currentUid;}
-
-/* ── GITHUB API ────────────────────────────────── */
-const GH_API=`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}`;
-
-async function ghLoad(){
-  showSync('Lijst laden…');
-  try{
-    const r=await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_DATA_FILE}?t=${Date.now()}`);
-    if(r.status===404){hideSync();return;}
-    if(!r.ok){hideSync();toast('Laden mislukt','err');return;}
-    const data=await r.json();
-    applyData(data);
-  }catch(e){console.warn('ghLoad',e);toast('Laden mislukt','err');}
-  hideSync();
-}
-
-function applyData(data){
-  // Migreer oude array-formaat (zonder users register)
-  if(Array.isArray(data)){
-    const nameToUid={};
-    data.forEach(s=>{
-      // maak uid aan per naam
-      if(s.suggesterName&&!nameToUid[s.suggesterName])nameToUid[s.suggesterName]=genUid();
-      if(s.votes)Object.keys(s.votes).forEach(n=>{if(!nameToUid[n])nameToUid[n]=genUid();});
-      s.comments&&s.comments.forEach(c=>{if(c.author&&!nameToUid[c.author])nameToUid[c.author]=genUid();});
-    });
-    // bouw users register
-    users={};
-    Object.entries(nameToUid).forEach(([n,u])=>users[u]=n);
-    // vervang namen door uids in songs
-    songs=data.map(s=>({
-      ...s,
-      suggesterUid:nameToUid[s.suggesterName]||genUid(),
-      votes:Object.fromEntries(Object.entries(s.votes||{}).map(([n,v])=>[nameToUid[n]||genUid(),v])),
-      comments:(s.comments||[]).map(c=>({...c,uid:nameToUid[c.author||'']||genUid()}))
-    }));
-  } else {
-    users=data.users||{};
-    songs=data.songs||[];
-  }
-  // Zorg dat eigen uid/naam in users staat na laden
-  if(currentUid&&!users[currentUid]){
-    // uid bestaat nog niet in data — naam is al gezet bij login, voeg toe
-    // (wordt opgeslagen bij volgende scheduleSave)
-  }
-}
-
-function buildPayload(){
-  return JSON.stringify({users,songs},null,2);
-}
-
-async function ghSave(){
-  if(isSaving)return;
-  isSaving=true;showSync('Opslaan…');
-  try{
-    const metaR=await fetch(GH_API,{headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json'}});
-    let sha=null;
-    if(metaR.ok){const meta=await metaR.json();sha=meta.sha;}
-    const content=btoa(unescape(encodeURIComponent(buildPayload())));
-    const body={message:'💾 SongVote update',content};
-    if(sha)body.sha=sha;
-    const r=await fetch(GH_API,{method:'PUT',headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(r.ok)toast('Opgeslagen ✓','ok');
-    else{const e=await r.json();console.error(e);toast('Opslaan mislukt','err');}
-  }catch(e){console.warn(e);toast('Geen verbinding','err');}
-  isSaving=false;hideSync();
-}
-function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1400);}
-function showSync(m){document.getElementById('sync-msg').textContent=m;document.getElementById('sync-bar').style.display='flex';}
-function hideSync(){document.getElementById('sync-bar').style.display='none';}
-
-/* ── TOAST ─────────────────────────────────────── */
-let toastT;
-function toast(msg,type='ok'){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className='show '+type;
-  clearTimeout(toastT);toastT=setTimeout(()=>el.className='',3200);
-}
-
-/* ── YOUTUBE ───────────────────────────────────── */
-function ytId(url){if(!url)return null;const m=url.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);return(m&&m[2].length===11)?m[2]:null;}
-function thumb(links){const l=links.find(l=>ytId(l));const id=l?ytId(l):null;return id?`https://img.youtube.com/vi/${id}/mqdefault.jpg`:null;}
-
-/* ── USER / LOGIN ──────────────────────────────── */
-function getUsedNames(){
-  return Object.values(users).map(n=>n.trim().toLowerCase());
-}
-
-function loginWithUid(uid){
-  currentUid=uid;
-  try{localStorage.setItem('sv_uid',uid);}catch{}
-  const url=new URL(location.href);
-  url.searchParams.set('uid',uid);
-  url.searchParams.delete('user'); // opruimen oud formaat
-  history.replaceState({},'',url.toString());
-  document.getElementById('modal-user').style.display='none';
-  renderHeader();updateAdminControls();renderSongs();
-}
-
-function registerUser(name){
-  name=name.trim();
-  if(!name)return;
-  // check of naam al bestaat (case-insensitive)
-  const taken=getUsedNames();
-  if(taken.includes(name.toLowerCase())){
-    document.getElementById('inp-name-err').textContent=`"${name}" is al in gebruik. Kies een andere naam.`;
-    document.getElementById('inp-name-err').style.display='block';
-    return;
-  }
-  const uid=genUid();
-  users[uid]=name;
-  loginWithUid(uid);
-  scheduleSave();
-  toast(`Welkom, ${name}! 🎸`);
-}
-
-function changeUser(){
-  const newName=(prompt('Nieuwe weergavenaam:',myName())||'').trim();
-  if(!newName||newName===myName())return;
-  // check duplicaat (exclusief eigen naam)
-  const taken=Object.entries(users)
-    .filter(([uid])=>uid!==currentUid)
-    .map(([,n])=>n.trim().toLowerCase());
-  if(taken.includes(newName.toLowerCase())){
-    toast(`"${newName}" is al in gebruik`,'err');return;
-  }
-  users[currentUid]=newName;
-  // Update ook ADMIN_USER config vergelijking: naam is gewijzigd, werkt automatisch via isAdmin()
-  renderHeader();updateAdminControls();renderSongs();
-  scheduleSave();
-  toast(`Naam gewijzigd naar ${newName}`);
-}
-
-/* ── HEADER ────────────────────────────────────── */
-function renderHeader(){
-  const hr=document.getElementById('header-right');
-  let h='';
-  if(currentUid&&users[currentUid]){
-    h+=`<div class="user-chip"><span class="user-dot"></span><span class="user-chip-name">${esc(myName())}</span><button class="btn-change" onclick="changeUser()">wijzig</button></div>`;
-  }
-  hr.innerHTML=h;
-}
-
-/* ── ADMIN ─────────────────────────────────────── */
-function updateAdminControls(){
-  const a=isAdmin();
-  document.getElementById('btn-import').style.display=a?'inline-flex':'none';
-  document.getElementById('btn-export').style.display=a?'inline-flex':'none';
-  document.getElementById('btn-manage-users').style.display=a?'inline-flex':'none';
-}
-
-/* ── USER MANAGEMENT ───────────────────────────── */
-function openManageUsers(){renderUsersList();document.getElementById('modal-users').style.display='flex';}
-function renderUsersList(){
-  const el=document.getElementById('users-list');
-  const entries=Object.entries(users).sort((a,b)=>a[1].localeCompare(b[1],'nl'));
-  if(!entries.length){el.innerHTML=`<p style="color:var(--muted);font-size:14px">Geen gebruikers.</p>`;return;}
-  el.innerHTML=entries.map(([uid,name])=>{
-    const adminTag=name.toLowerCase()===ADMIN_USER.toLowerCase()?`<span class="user-tag">admin</span>`:'';
-    const isMe=uid===currentUid;
-    const canDel=!isMe&&name.toLowerCase()!==ADMIN_USER.toLowerCase();
-    const delBtn=canDel?`<button class="btn-del-user" onclick="deleteUser('${esc(uid)}')" title="Verwijder">🗑️</button>`:`<span style="width:28px"></span>`;
-    return`<div class="user-row"><span class="user-row-name">${esc(name)}${adminTag}${isMe?' <span style="font-size:11px;color:var(--muted)">(jij)</span>':''}</span>${delBtn}</div>`;
-  }).join('');
-}
-function deleteUser(uid){
-  const name=users[uid]||uid;
-  if(!confirm(`"${name}" verwijderen inclusief alle stemmen, reacties en voorgestelde nummers?`))return;
-  // verwijder stem + reacties uit songs
-  songs.forEach(s=>{
-    if(s.votes&&s.votes[uid]){
-      if(s.votes[uid]==='up')s.upvotes=Math.max(0,s.upvotes-1);
-      if(s.votes[uid]==='down')s.downvotes=Math.max(0,s.downvotes-1);
-      delete s.votes[uid];
-    }
-    s.comments=s.comments.filter(c=>c.uid!==uid);
-  });
-  // verwijder voorgestelde nummers
-  songs=songs.filter(s=>s.suggesterUid!==uid);
-  // verwijder uit users register
-  delete users[uid];
-  renderUsersList();renderSongs();scheduleSave();
-  toast(`${name} verwijderd`);
-}
-document.getElementById('btn-manage-users').onclick=openManageUsers;
-document.getElementById('btn-users-close').onclick=()=>{document.getElementById('modal-users').style.display='none';};
-
-/* ── LINKS HELPERS ─────────────────────────────── */
-function addLinkRow(wrap,val=''){
-  const d=document.createElement('div');d.className='link-row';
-  d.innerHTML=`<input type="url" value="${esc(val)}" placeholder="https://…"/><button class="btn-rm" onclick="this.parentElement.remove()">−</button>`;
-  wrap.appendChild(d);
-}
-document.getElementById('btn-new-addlink').onclick=()=>addLinkRow(document.getElementById('new-links-wrap'));
-document.getElementById('btn-edit-addlink').onclick=()=>addLinkRow(document.getElementById('edit-links-wrap'));
-
-/* ── ADD SONG ──────────────────────────────────── */
-function addSong(){
-  if(!currentUid){toast('Voer eerst je naam in','err');return;}
-  const title=document.getElementById('new-title').value.trim();
-  const artist=document.getElementById('new-artist').value.trim();
-  const links=[...document.querySelectorAll('#new-links-wrap input')].map(i=>i.value.trim()).filter(Boolean);
-  const comment=document.getElementById('new-comment').value.trim();
-  const errEl=document.getElementById('new-err');
-  if(!title||!artist||!links.length){errEl.textContent='Titel, artiest en minstens één link zijn verplicht.';errEl.style.display='block';return;}
-  errEl.style.display='none';
-  songs.unshift({id:Date.now(),title,artist,links,suggesterComment:comment,suggesterUid:currentUid,suggesterName:myName(),thumbnailUrl:thumb(links)||'placeholder',upvotes:0,downvotes:0,comments:[],votes:{}});
-  document.getElementById('new-title').value='';
-  document.getElementById('new-artist').value='';
-  document.getElementById('new-links-wrap').innerHTML='<div class="link-row"><input type="url" placeholder="https://…"/></div>';
-  document.getElementById('new-comment').value='';
-  renderSongs();scheduleSave();toast('Nummer toegevoegd!');
-}
-
-/* ── EDIT SONG ─────────────────────────────────── */
-function openEdit(id){
-  const s=songs.find(s=>s.id===id);if(!s)return;
-  editingId=id;
-  document.getElementById('edit-title').value=s.title;
-  document.getElementById('edit-artist').value=s.artist;
-  document.getElementById('edit-comment').value=s.suggesterComment||'';
-  const lw=document.getElementById('edit-links-wrap');lw.innerHTML='';
-  s.links.forEach(l=>addLinkRow(lw,l));
-  document.getElementById('modal-edit').style.display='flex';
-}
-document.getElementById('btn-edit-cancel').onclick=()=>{document.getElementById('modal-edit').style.display='none';editingId=null;};
-document.getElementById('btn-edit-save').onclick=()=>{
-  const title=document.getElementById('edit-title').value.trim();
-  const artist=document.getElementById('edit-artist').value.trim();
-  const links=[...document.querySelectorAll('#edit-links-wrap input')].map(i=>i.value.trim()).filter(Boolean);
-  const comment=document.getElementById('edit-comment').value.trim();
-  const errEl=document.getElementById('edit-err');
-  if(!title||!artist||!links.length){errEl.textContent='Titel, artiest en minstens één link zijn verplicht.';errEl.style.display='block';return;}
-  errEl.style.display='none';
-  const s=songs.find(s=>s.id===editingId);
-  if(s)Object.assign(s,{title,artist,links,suggesterComment:comment,thumbnailUrl:thumb(links)||'placeholder'});
-  document.getElementById('modal-edit').style.display='none';editingId=null;
-  renderSongs();scheduleSave();toast('Nummer bijgewerkt');
-};
-
-/* ── DELETE ────────────────────────────────────── */
-function deleteSong(id){
-  const s=songs.find(s=>s.id===id);if(!s)return;
-  if(!confirm(`"${s.title}" verwijderen?`))return;
-  songs=songs.filter(s=>s.id!==id);renderSongs();scheduleSave();toast('Verwijderd');
-}
-
-/* ── VOTE ──────────────────────────────────────── */
-function vote(id,type){
-  if(!currentUid){toast('Voer eerst je naam in','err');return;}
-  const s=songs.find(s=>s.id===id);if(!s)return;
-  if(!s.votes)s.votes={};
-  const prev=s.votes[currentUid];
-  if(prev===type){s.votes[currentUid]=null;type==='up'?s.upvotes--:s.downvotes--;}
-  else{
-    if(prev==='up')s.upvotes--;if(prev==='down')s.downvotes--;
-    s.votes[currentUid]=type;type==='up'?s.upvotes++:s.downvotes++;
-  }
-  renderSongs();scheduleSave();
-}
-
-/* ── COMMENTS ──────────────────────────────────── */
-function toggleCmnt(id){cmntOpen[id]=!cmntOpen[id];renderSongs();}
-function toggleVotes(id){voteOpen[id]=!voteOpen[id];renderSongs();}
-function addComment(id){
-  if(!currentUid){toast('Voer eerst je naam in','err');return;}
-  const inp=document.getElementById('ci-'+id);
-  if(!inp||!inp.value.trim())return;
-  const s=songs.find(s=>s.id===id);if(!s)return;
-  s.comments.push({id:Date.now(),uid:currentUid,text:inp.value.trim()});
-  renderSongs();scheduleSave();
-}
-
-/* ── SORT ──────────────────────────────────────── */
-document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{
-  sortBy=b.dataset.sort;
-  document.querySelectorAll('[data-sort]').forEach(x=>x.classList.toggle('on',x===b));
-  renderSongs();
-});
-document.querySelectorAll('[data-order]').forEach(b=>b.onclick=()=>{
-  sortOrder=b.dataset.order;
-  document.querySelectorAll('[data-order]').forEach(x=>x.classList.toggle('on',x===b));
-  renderSongs();
-});
-
-/* ── IMPORT / EXPORT ───────────────────────────── */
-document.getElementById('btn-export').onclick=()=>{
-  const blob=new Blob([buildPayload()],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download='songvote_backup.json';a.click();URL.revokeObjectURL(url);
-};
-document.getElementById('btn-import').onclick=()=>document.getElementById('file-import').click();
-document.getElementById('file-import').onchange=e=>{
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{const d=JSON.parse(ev.target.result);applyData(d);renderSongs();scheduleSave();toast('Lijst geïmporteerd');}
-    catch{toast('Kon bestand niet lezen','err');}
-  };
-  r.readAsText(f);e.target.value='';
-};
-
-/* ── WHATSAPP EXPORT ───────────────────────────── */
-function buildWhatsAppText(){
-  const sorted=[...songs].sort((a,b)=>(b.upvotes-b.downvotes)-(a.upvotes-a.downvotes));
-  const date=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
-  let txt=`🎸 *SongVote lijst* — ${date}\n\n`;
-  sorted.forEach((s,i)=>{
-    txt+=`${i+1}. 🎵 *${s.title}*\n    ${s.artist}\n    👍 ${s.upvotes}  👎 ${s.downvotes}\n\n`;
-  });
-  txt+=`_${sorted.length} nummer${sorted.length!==1?'s':''} voorgesteld_`;
-  return txt;
-}
-document.getElementById('btn-whatsapp').onclick=()=>{
-  document.getElementById('whatsapp-text').value=buildWhatsAppText();
-  document.getElementById('modal-whatsapp').style.display='flex';
-};
-document.getElementById('btn-whatsapp-close').onclick=()=>{document.getElementById('modal-whatsapp').style.display='none';};
-document.getElementById('btn-whatsapp-copy').onclick=()=>{
-  const ta=document.getElementById('whatsapp-text');
-  navigator.clipboard.writeText(ta.value).then(()=>toast('Gekopieerd! 🎉')).catch(()=>{ta.select();document.execCommand('copy');toast('Gekopieerd!');});
-};
-
-/* ── RENDER ────────────────────────────────────── */
-function renderSongs(){
-  const sorted=[...songs].sort((a,b)=>{
-    const c=sortBy==='popularity'?(a.upvotes-a.downvotes)-(b.upvotes-b.downvotes):a.title.localeCompare(b.title,'nl');
-    return sortOrder==='asc'?c:-c;
-  });
-  const el=document.getElementById('songs-list');
-  if(!sorted.length){
-    el.innerHTML=`<div class="empty"><div class="e-icon">🎵</div><h3>Nog geen nummers voorgesteld</h3><p>Wees de eerste en gebruik het formulier hierboven!</p></div>`;
-    return;
-  }
-  el.innerHTML=sorted.map(s=>{
-    const sc=s.upvotes-s.downvotes;
-    const scClass=sc>0?'pos':sc<0?'neg':'neu';
-    const scStr=sc>0?`+${sc}`:String(sc);
-    const myVote=(s.votes&&currentUid)?s.votes[currentUid]:null;
-    const th=s.thumbnailUrl&&s.thumbnailUrl!=='placeholder'
-      ?`<img src="${esc(s.thumbnailUrl)}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><span class="no-art" style="display:none">♪</span>`
-      :`<span class="no-art">♪</span>`;
-    const lnks=s.links.map((l,i)=>`<a class="link-pill" href="${esc(l)}" target="_blank" rel="noopener">🔗 Link ${i+1}</a>`).join('');
-    const ownerBtns=(isOwner(s)||isAdmin())?`<div class="card-actions"><button class="icon-btn edit" onclick="openEdit(${s.id})" title="Bewerken">✏️</button><button class="icon-btn del" onclick="deleteSong(${s.id})" title="Verwijderen">🗑️</button></div>`:'';
-    const quote=s.suggesterComment?`<div class="song-quote">"${esc(s.suggesterComment)}"</div>`:'';
-    // vote details
-    const upVoters=Object.entries(s.votes||{}).filter(([,v])=>v==='up').map(([uid])=>nameOf(uid));
-    const downVoters=Object.entries(s.votes||{}).filter(([,v])=>v==='down').map(([uid])=>nameOf(uid));
-    const vOpen=voteOpen[s.id];
-    const voteDetailsHtml=vOpen?`<div class="vote-details">
-      <div class="vote-group"><div class="vote-group-label">👍 Voor (${upVoters.length})</div>
-        ${upVoters.length?upVoters.map(n=>`<span class="vote-name up">✓ ${esc(n)}</span>`).join(''):`<span class="vote-name" style="color:var(--muted);font-style:italic">niemand</span>`}
-      </div>
-      <div class="vote-group"><div class="vote-group-label">👎 Tegen (${downVoters.length})</div>
-        ${downVoters.length?downVoters.map(n=>`<span class="vote-name down">✗ ${esc(n)}</span>`).join(''):`<span class="vote-name" style="color:var(--muted);font-style:italic">niemand</span>`}
-      </div>
-    </div>`:'';
-    // comments
-    const open=cmntOpen[s.id];
-    const cmntHtml=open?`<div class="cmnt-section">
-      <div class="cmnt-list">${s.comments.length
-        ?s.comments.map(c=>`<div class="cmnt-item"><span class="cmnt-author">${esc(nameOf(c.uid))}</span>${esc(c.text)}</div>`).join('')
-        :`<div class="cmnt-empty">Nog geen reacties.</div>`}
-      </div>
-      <div class="cmnt-form"><input type="text" id="ci-${s.id}" placeholder="Schrijf een reactie…" onkeydown="if(event.key==='Enter')addComment(${s.id})"/><button class="cmnt-submit" onclick="addComment(${s.id})">Verstuur</button></div>
-    </div>`:'';
-    const suggesterName=nameOf(s.suggesterUid)||s.suggesterName||'?';
-    return`<div class="song-card">
-      <div class="song-main">
-        <a class="song-thumb" href="${esc(s.links[0]||'#')}" target="_blank" rel="noopener">${th}</a>
-        <div class="song-body">
-          <div class="song-top">
-            <div class="song-meta">
-              <div class="song-title">${esc(s.title)}</div>
-              <div class="song-artist">${esc(s.artist)}</div>
-              <div class="song-by">door <strong>${esc(suggesterName)}</strong></div>
-            </div>${ownerBtns}
-          </div>
-          <div class="song-links">${lnks}</div>${quote}
-        </div>
-      </div>
-      <div class="song-foot">
-        <div class="votes">
-          <button class="vote-btn up${myVote==='up'?' voted-up':''}" onclick="vote(${s.id},'up')">👍 ${s.upvotes}</button>
-          <button class="vote-btn down${myVote==='down'?' voted-down':''}" onclick="vote(${s.id},'down')">👎 ${s.downvotes}</button>
-        </div>
-        <span class="score ${scClass}" style="cursor:pointer" onclick="toggleVotes(${s.id})" title="Wie heeft gestemd?">${scStr}</span>
-        <button class="cmnt-toggle" onclick="toggleCmnt(${s.id})">💬 ${s.comments.length}</button>
-      </div>${voteDetailsHtml}${cmntHtml}
-    </div>`;
-  }).join('');
-}
-
-/* ── BOOTSTRAP ─────────────────────────────────── */
-document.getElementById('btn-set-user').onclick=()=>registerUser(document.getElementById('inp-name').value);
-document.getElementById('inp-name').addEventListener('keydown',e=>{if(e.key==='Enter')registerUser(document.getElementById('inp-name').value);});
-document.getElementById('btn-add-song').onclick=addSong;
-
-async function init(){
-  // Laad data eerst zodat we bestaande namen kunnen checken
-  await ghLoad();
-
-  // Haal uid op uit URL of localStorage
-  const urlUid=new URLSearchParams(location.search).get('uid');
-  const storedUid=(()=>{try{return localStorage.getItem('sv_uid');}catch{return null;}})();
-  const uid=urlUid||storedUid;
-
-  if(uid&&users[uid]){
-    // Bekende gebruiker — direct inloggen
-    currentUid=uid;
-    try{localStorage.setItem('sv_uid',uid);}catch{}
-    const url=new URL(location.href);
-    url.searchParams.set('uid',uid);
-    history.replaceState({},'',url.toString());
-    document.getElementById('modal-user').style.display='none';
-  }
-  // anders: modal blijft zichtbaar, gebruiker vult naam in
-
-  renderHeader();
-  updateAdminControls();
-  renderSongs();
-}
-
-init();
-</script>
 </body>
 </html>
