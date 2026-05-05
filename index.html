@@ -140,6 +140,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .cmnt-submit{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;transition:.15s;}
 .cmnt-submit:hover{filter:brightness(1.1)}
 
+/* ── VOTE DETAILS ── */
+.vote-details{padding:8px 14px 10px;border-top:1px solid var(--border);background:rgba(0,0,0,.1);display:flex;gap:16px;flex-wrap:wrap;}
+.vote-group{display:flex;flex-direction:column;gap:4px;min-width:120px;}
+.vote-group-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px}
+.vote-name{font-size:12px;color:var(--text);display:flex;align-items:center;gap:4px}
+.vote-name.up{color:var(--green)}.vote-name.down{color:var(--accent)}
+
+/* ── USER MANAGEMENT MODAL ── */
+.user-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--s3);border-radius:8px;margin-bottom:6px;}
+.user-row-name{font-size:14px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:8px}
+.user-tag{font-size:10px;background:var(--accent);color:#fff;border-radius:4px;padding:1px 6px;font-weight:600}
+.btn-del-user{background:none;border:none;color:var(--muted);font-size:18px;padding:2px 6px;border-radius:6px;transition:.15s;line-height:1}
+.btn-del-user:hover{color:var(--accent);background:var(--accent-dim)}
+
 /* ── EMPTY STATE ── */
 .empty{text-align:center;padding:56px 24px;border:2px dashed var(--border2);border-radius:16px;}
 .empty .e-icon{font-size:44px;margin-bottom:12px}
@@ -173,6 +187,7 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
     <div class="field">
       <label for="inp-name">Jouw naam</label>
       <input type="text" id="inp-name" placeholder="bv. Jan" autocomplete="off"/>
+      <p class="field-error" id="inp-name-err" style="display:none"></p>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" id="btn-set-user">Opslaan en doorgaan →</button>
@@ -198,6 +213,18 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
     <div class="modal-footer">
       <button class="btn-secondary" id="btn-edit-cancel">Annuleren</button>
       <button class="btn-primary" id="btn-edit-save">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- USERS MODAL -->
+<div class="overlay" id="modal-users" style="display:none">
+  <div class="modal wide">
+    <div class="modal-title">👥 Gebruikers beheren</div>
+    <div class="modal-sub">Verwijder een gebruiker inclusief al zijn stemmen en reacties.</div>
+    <div id="users-list"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="btn-users-close">Sluiten</button>
     </div>
   </div>
 </div>
@@ -258,6 +285,7 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
     <div class="controls">
       <button class="io-btn" id="btn-import" style="display:none">⬆ Import JSON</button>
       <button class="io-btn" id="btn-export" style="display:none">⬇ Export JSON</button>
+      <button class="io-btn" id="btn-manage-users" style="display:none">👥 Gebruikers</button>
       <button class="io-btn" id="btn-whatsapp">📋 WhatsApp lijst</button>
       <input type="file" id="file-import" accept=".json" style="display:none"/>
       <div class="pill-group">
@@ -283,85 +311,114 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
 /* ═══════════════════════════════════════════════════
    ⚙️  CONFIG — vul dit in!
 ═══════════════════════════════════════════════════ */
-const GH_OWNER      = 'ivomom-ux';  // ← bv. 'jandevries'
-const GH_REPO       = 'songvote-HotStew';         // ← bv. 'songvote-hotstew'
-const GH_TOKEN      = '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';            // ← Personal Access Token
-const GH_DATA_FILE  = 'songvote_data.json';           // bestandsnaam in de repo
-const ADMIN_USER    = 'IvoM';                           // naam van de beheerder
+const GH_OWNER      = 'JOUW_GITHUB_GEBRUIKERSNAAM';
+const GH_REPO       = 'JOUW_REPOSITORY_NAAM';
+const GH_TOKEN      = 'JOUW_GITHUB_TOKEN';
+const GH_DATA_FILE  = 'songvote_data.json';
+const ADMIN_USER    = 'Jan';  // weergavenaam van de beheerder
 /* ═══════════════════════════════════════════════════ */
 
+/*
+  DATA STRUCTUUR
+  --------------
+  JSON bevat een object met twee velden:
+  {
+    users: { uid: displayName, ... },   ← gebruikersregister
+    songs: [ { ...song, votes: { uid: 'up'|'down'|null }, comments: [{uid, text}] } ]
+  }
+
+  Oude JSON (array zonder users) wordt automatisch gemigreerd.
+*/
+
 let songs      = [];
+let users      = {};   // { uid: name }
 let sortBy     = 'popularity';
 let sortOrder  = 'desc';
-let currentUser= null;
+let currentUid = null;  // eigen uid
 let editingId  = null;
 let saveTimer  = null;
 let isSaving   = false;
 const cmntOpen = {};
+const voteOpen = {};
+
+/* ── HELPERS ───────────────────────────────────── */
+function genUid(){
+  return Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,6);
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function myName(){return users[currentUid]||'?';}
+function nameOf(uid){return users[uid]||uid||'?';}
+function isAdmin(){return myName().trim().toLowerCase()===ADMIN_USER.trim().toLowerCase();}
+function isOwner(s){return s.suggesterUid===currentUid;}
 
 /* ── GITHUB API ────────────────────────────────── */
-const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}`;
+const GH_API=`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}`;
 
 async function ghLoad(){
   showSync('Lijst laden…');
   try{
-    // Lezen via de publieke raw URL — geen auth nodig
-    const url=`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_DATA_FILE}?t=${Date.now()}`;
-    const r=await fetch(url);
-    if(r.status===404){hideSync();return;} // bestand bestaat nog niet
+    const r=await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_DATA_FILE}?t=${Date.now()}`);
+    if(r.status===404){hideSync();return;}
     if(!r.ok){hideSync();toast('Laden mislukt','err');return;}
     const data=await r.json();
-    if(Array.isArray(data))songs=data;
+    applyData(data);
   }catch(e){console.warn('ghLoad',e);toast('Laden mislukt','err');}
   hideSync();
 }
 
+function applyData(data){
+  // Migreer oude array-formaat (zonder users register)
+  if(Array.isArray(data)){
+    const nameToUid={};
+    data.forEach(s=>{
+      // maak uid aan per naam
+      if(s.suggesterName&&!nameToUid[s.suggesterName])nameToUid[s.suggesterName]=genUid();
+      if(s.votes)Object.keys(s.votes).forEach(n=>{if(!nameToUid[n])nameToUid[n]=genUid();});
+      s.comments&&s.comments.forEach(c=>{if(c.author&&!nameToUid[c.author])nameToUid[c.author]=genUid();});
+    });
+    // bouw users register
+    users={};
+    Object.entries(nameToUid).forEach(([n,u])=>users[u]=n);
+    // vervang namen door uids in songs
+    songs=data.map(s=>({
+      ...s,
+      suggesterUid:nameToUid[s.suggesterName]||genUid(),
+      votes:Object.fromEntries(Object.entries(s.votes||{}).map(([n,v])=>[nameToUid[n]||genUid(),v])),
+      comments:(s.comments||[]).map(c=>({...c,uid:nameToUid[c.author||'']||genUid()}))
+    }));
+  } else {
+    users=data.users||{};
+    songs=data.songs||[];
+  }
+  // Zorg dat eigen uid/naam in users staat na laden
+  if(currentUid&&!users[currentUid]){
+    // uid bestaat nog niet in data — naam is al gezet bij login, voeg toe
+    // (wordt opgeslagen bij volgende scheduleSave)
+  }
+}
+
+function buildPayload(){
+  return JSON.stringify({users,songs},null,2);
+}
+
 async function ghSave(){
   if(isSaving)return;
-  isSaving=true;
-  showSync('Opslaan…');
+  isSaving=true;showSync('Opslaan…');
   try{
-    // Haal de huidige SHA op (nodig voor update)
-    const metaR=await fetch(GH_API,{
-      headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json'}
-    });
+    const metaR=await fetch(GH_API,{headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json'}});
     let sha=null;
     if(metaR.ok){const meta=await metaR.json();sha=meta.sha;}
-
-    const content=btoa(unescape(encodeURIComponent(JSON.stringify(songs,null,2))));
+    const content=btoa(unescape(encodeURIComponent(buildPayload())));
     const body={message:'💾 SongVote update',content};
     if(sha)body.sha=sha;
-
-    const r=await fetch(GH_API,{
-      method:'PUT',
-      headers:{
-        'Authorization':`Bearer ${GH_TOKEN}`,
-        'Accept':'application/vnd.github+json',
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify(body)
-    });
-
+    const r=await fetch(GH_API,{method:'PUT',headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
     if(r.ok)toast('Opgeslagen ✓','ok');
-    else{
-      const err=await r.json();
-      console.error('ghSave error',err);
-      toast('Opslaan mislukt','err');
-    }
-  }catch(e){console.warn('ghSave',e);toast('Geen verbinding','err');}
-  isSaving=false;
-  hideSync();
+    else{const e=await r.json();console.error(e);toast('Opslaan mislukt','err');}
+  }catch(e){console.warn(e);toast('Geen verbinding','err');}
+  isSaving=false;hideSync();
 }
-
-function scheduleSave(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(ghSave,1400);
-}
-
-function showSync(m){
-  document.getElementById('sync-msg').textContent=m;
-  document.getElementById('sync-bar').style.display='flex';
-}
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1400);}
+function showSync(m){document.getElementById('sync-msg').textContent=m;document.getElementById('sync-bar').style.display='flex';}
 function hideSync(){document.getElementById('sync-bar').style.display='none';}
 
 /* ── TOAST ─────────────────────────────────────── */
@@ -373,45 +430,112 @@ function toast(msg,type='ok'){
 }
 
 /* ── YOUTUBE ───────────────────────────────────── */
-function ytId(url){
-  if(!url)return null;
-  const m=url.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
-  return(m&&m[2].length===11)?m[2]:null;
-}
-function thumb(links){
-  const l=links.find(l=>ytId(l));const id=l?ytId(l):null;
-  return id?`https://img.youtube.com/vi/${id}/mqdefault.jpg`:null;
+function ytId(url){if(!url)return null;const m=url.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);return(m&&m[2].length===11)?m[2]:null;}
+function thumb(links){const l=links.find(l=>ytId(l));const id=l?ytId(l):null;return id?`https://img.youtube.com/vi/${id}/mqdefault.jpg`:null;}
+
+/* ── USER / LOGIN ──────────────────────────────── */
+function getUsedNames(){
+  return Object.values(users).map(n=>n.trim().toLowerCase());
 }
 
-/* ── USER ──────────────────────────────────────── */
-function setUser(name){
-  name=name.trim();if(!name)return;
-  currentUser=name;
-  try{localStorage.setItem('sv_user',name);}catch{}
+function loginWithUid(uid){
+  currentUid=uid;
+  try{localStorage.setItem('sv_uid',uid);}catch{}
+  const url=new URL(location.href);
+  url.searchParams.set('uid',uid);
+  url.searchParams.delete('user'); // opruimen oud formaat
+  history.replaceState({},'',url.toString());
   document.getElementById('modal-user').style.display='none';
   renderHeader();updateAdminControls();renderSongs();
 }
+
+function registerUser(name){
+  name=name.trim();
+  if(!name)return;
+  // check of naam al bestaat (case-insensitive)
+  const taken=getUsedNames();
+  if(taken.includes(name.toLowerCase())){
+    document.getElementById('inp-name-err').textContent=`"${name}" is al in gebruik. Kies een andere naam.`;
+    document.getElementById('inp-name-err').style.display='block';
+    return;
+  }
+  const uid=genUid();
+  users[uid]=name;
+  loginWithUid(uid);
+  scheduleSave();
+  toast(`Welkom, ${name}! 🎸`);
+}
+
 function changeUser(){
-  const n=(prompt('Nieuwe naam:',currentUser)||'').trim();
-  if(n)setUser(n);
+  const newName=(prompt('Nieuwe weergavenaam:',myName())||'').trim();
+  if(!newName||newName===myName())return;
+  // check duplicaat (exclusief eigen naam)
+  const taken=Object.entries(users)
+    .filter(([uid])=>uid!==currentUid)
+    .map(([,n])=>n.trim().toLowerCase());
+  if(taken.includes(newName.toLowerCase())){
+    toast(`"${newName}" is al in gebruik`,'err');return;
+  }
+  users[currentUid]=newName;
+  // Update ook ADMIN_USER config vergelijking: naam is gewijzigd, werkt automatisch via isAdmin()
+  renderHeader();updateAdminControls();renderSongs();
+  scheduleSave();
+  toast(`Naam gewijzigd naar ${newName}`);
 }
 
 /* ── HEADER ────────────────────────────────────── */
 function renderHeader(){
   const hr=document.getElementById('header-right');
   let h='';
-  if(currentUser){
-    h+=`<div class="user-chip"><span class="user-dot"></span><span class="user-chip-name">${esc(currentUser)}</span><button class="btn-change" onclick="changeUser()">wijzig</button></div>`;
+  if(currentUid&&users[currentUid]){
+    h+=`<div class="user-chip"><span class="user-dot"></span><span class="user-chip-name">${esc(myName())}</span><button class="btn-change" onclick="changeUser()">wijzig</button></div>`;
   }
   hr.innerHTML=h;
 }
 
 /* ── ADMIN ─────────────────────────────────────── */
 function updateAdminControls(){
-  const isAdmin=currentUser&&currentUser.trim().toLowerCase()===ADMIN_USER.trim().toLowerCase();
-  document.getElementById('btn-import').style.display=isAdmin?'inline-flex':'none';
-  document.getElementById('btn-export').style.display=isAdmin?'inline-flex':'none';
+  const a=isAdmin();
+  document.getElementById('btn-import').style.display=a?'inline-flex':'none';
+  document.getElementById('btn-export').style.display=a?'inline-flex':'none';
+  document.getElementById('btn-manage-users').style.display=a?'inline-flex':'none';
 }
+
+/* ── USER MANAGEMENT ───────────────────────────── */
+function openManageUsers(){renderUsersList();document.getElementById('modal-users').style.display='flex';}
+function renderUsersList(){
+  const el=document.getElementById('users-list');
+  const entries=Object.entries(users).sort((a,b)=>a[1].localeCompare(b[1],'nl'));
+  if(!entries.length){el.innerHTML=`<p style="color:var(--muted);font-size:14px">Geen gebruikers.</p>`;return;}
+  el.innerHTML=entries.map(([uid,name])=>{
+    const adminTag=name.toLowerCase()===ADMIN_USER.toLowerCase()?`<span class="user-tag">admin</span>`:'';
+    const isMe=uid===currentUid;
+    const canDel=!isMe&&name.toLowerCase()!==ADMIN_USER.toLowerCase();
+    const delBtn=canDel?`<button class="btn-del-user" onclick="deleteUser('${esc(uid)}')" title="Verwijder">🗑️</button>`:`<span style="width:28px"></span>`;
+    return`<div class="user-row"><span class="user-row-name">${esc(name)}${adminTag}${isMe?' <span style="font-size:11px;color:var(--muted)">(jij)</span>':''}</span>${delBtn}</div>`;
+  }).join('');
+}
+function deleteUser(uid){
+  const name=users[uid]||uid;
+  if(!confirm(`"${name}" verwijderen inclusief alle stemmen, reacties en voorgestelde nummers?`))return;
+  // verwijder stem + reacties uit songs
+  songs.forEach(s=>{
+    if(s.votes&&s.votes[uid]){
+      if(s.votes[uid]==='up')s.upvotes=Math.max(0,s.upvotes-1);
+      if(s.votes[uid]==='down')s.downvotes=Math.max(0,s.downvotes-1);
+      delete s.votes[uid];
+    }
+    s.comments=s.comments.filter(c=>c.uid!==uid);
+  });
+  // verwijder voorgestelde nummers
+  songs=songs.filter(s=>s.suggesterUid!==uid);
+  // verwijder uit users register
+  delete users[uid];
+  renderUsersList();renderSongs();scheduleSave();
+  toast(`${name} verwijderd`);
+}
+document.getElementById('btn-manage-users').onclick=openManageUsers;
+document.getElementById('btn-users-close').onclick=()=>{document.getElementById('modal-users').style.display='none';};
 
 /* ── LINKS HELPERS ─────────────────────────────── */
 function addLinkRow(wrap,val=''){
@@ -424,7 +548,7 @@ document.getElementById('btn-edit-addlink').onclick=()=>addLinkRow(document.getE
 
 /* ── ADD SONG ──────────────────────────────────── */
 function addSong(){
-  if(!currentUser){toast('Voer eerst je naam in','err');return;}
+  if(!currentUid){toast('Voer eerst je naam in','err');return;}
   const title=document.getElementById('new-title').value.trim();
   const artist=document.getElementById('new-artist').value.trim();
   const links=[...document.querySelectorAll('#new-links-wrap input')].map(i=>i.value.trim()).filter(Boolean);
@@ -432,7 +556,7 @@ function addSong(){
   const errEl=document.getElementById('new-err');
   if(!title||!artist||!links.length){errEl.textContent='Titel, artiest en minstens één link zijn verplicht.';errEl.style.display='block';return;}
   errEl.style.display='none';
-  songs.unshift({id:Date.now(),title,artist,links,suggesterComment:comment,suggesterName:currentUser,thumbnailUrl:thumb(links)||'placeholder',upvotes:0,downvotes:0,comments:[],votes:{}});
+  songs.unshift({id:Date.now(),title,artist,links,suggesterComment:comment,suggesterUid:currentUid,suggesterName:myName(),thumbnailUrl:thumb(links)||'placeholder',upvotes:0,downvotes:0,comments:[],votes:{}});
   document.getElementById('new-title').value='';
   document.getElementById('new-artist').value='';
   document.getElementById('new-links-wrap').innerHTML='<div class="link-row"><input type="url" placeholder="https://…"/></div>';
@@ -475,26 +599,27 @@ function deleteSong(id){
 
 /* ── VOTE ──────────────────────────────────────── */
 function vote(id,type){
-  if(!currentUser){toast('Voer eerst je naam in','err');return;}
+  if(!currentUid){toast('Voer eerst je naam in','err');return;}
   const s=songs.find(s=>s.id===id);if(!s)return;
   if(!s.votes)s.votes={};
-  const prev=s.votes[currentUser];
-  if(prev===type){s.votes[currentUser]=null;type==='up'?s.upvotes--:s.downvotes--;}
+  const prev=s.votes[currentUid];
+  if(prev===type){s.votes[currentUid]=null;type==='up'?s.upvotes--:s.downvotes--;}
   else{
     if(prev==='up')s.upvotes--;if(prev==='down')s.downvotes--;
-    s.votes[currentUser]=type;type==='up'?s.upvotes++:s.downvotes++;
+    s.votes[currentUid]=type;type==='up'?s.upvotes++:s.downvotes++;
   }
   renderSongs();scheduleSave();
 }
 
 /* ── COMMENTS ──────────────────────────────────── */
 function toggleCmnt(id){cmntOpen[id]=!cmntOpen[id];renderSongs();}
+function toggleVotes(id){voteOpen[id]=!voteOpen[id];renderSongs();}
 function addComment(id){
-  if(!currentUser){toast('Voer eerst je naam in','err');return;}
+  if(!currentUid){toast('Voer eerst je naam in','err');return;}
   const inp=document.getElementById('ci-'+id);
   if(!inp||!inp.value.trim())return;
   const s=songs.find(s=>s.id===id);if(!s)return;
-  s.comments.push({id:Date.now(),author:currentUser,text:inp.value.trim()});
+  s.comments.push({id:Date.now(),uid:currentUid,text:inp.value.trim()});
   renderSongs();scheduleSave();
 }
 
@@ -510,9 +635,9 @@ document.querySelectorAll('[data-order]').forEach(b=>b.onclick=()=>{
   renderSongs();
 });
 
-/* ── IMPORT / EXPORT (admin only) ─────────────── */
+/* ── IMPORT / EXPORT ───────────────────────────── */
 document.getElementById('btn-export').onclick=()=>{
-  const blob=new Blob([JSON.stringify(songs,null,2)],{type:'application/json'});
+  const blob=new Blob([buildPayload()],{type:'application/json'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
   a.href=url;a.download='songvote_backup.json';a.click();URL.revokeObjectURL(url);
 };
@@ -521,8 +646,7 @@ document.getElementById('file-import').onchange=e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
-    try{const d=JSON.parse(ev.target.result);if(Array.isArray(d)){songs=d;renderSongs();scheduleSave();toast('Lijst geïmporteerd');}
-    else toast('Ongeldig bestandsformaat','err');}
+    try{const d=JSON.parse(ev.target.result);applyData(d);renderSongs();scheduleSave();toast('Lijst geïmporteerd');}
     catch{toast('Kon bestand niet lezen','err');}
   };
   r.readAsText(f);e.target.value='';
@@ -534,9 +658,7 @@ function buildWhatsAppText(){
   const date=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
   let txt=`🎸 *SongVote lijst* — ${date}\n\n`;
   sorted.forEach((s,i)=>{
-    txt+=`${i+1}. 🎵 *${s.title}*\n`;
-    txt+=`    ${s.artist}\n`;
-    txt+=`    👍 ${s.upvotes}  👎 ${s.downvotes}\n\n`;
+    txt+=`${i+1}. 🎵 *${s.title}*\n    ${s.artist}\n    👍 ${s.upvotes}  👎 ${s.downvotes}\n\n`;
   });
   txt+=`_${sorted.length} nummer${sorted.length!==1?'s':''} voorgesteld_`;
   return txt;
@@ -552,8 +674,6 @@ document.getElementById('btn-whatsapp-copy').onclick=()=>{
 };
 
 /* ── RENDER ────────────────────────────────────── */
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
 function renderSongs(){
   const sorted=[...songs].sort((a,b)=>{
     const c=sortBy==='popularity'?(a.upvotes-a.downvotes)-(b.upvotes-b.downvotes):a.title.localeCompare(b.title,'nl');
@@ -568,19 +688,35 @@ function renderSongs(){
     const sc=s.upvotes-s.downvotes;
     const scClass=sc>0?'pos':sc<0?'neg':'neu';
     const scStr=sc>0?`+${sc}`:String(sc);
-    const isOwner=currentUser===s.suggesterName;
-    const myVote=(s.votes&&currentUser)?s.votes[currentUser]:null;
+    const myVote=(s.votes&&currentUid)?s.votes[currentUid]:null;
     const th=s.thumbnailUrl&&s.thumbnailUrl!=='placeholder'
       ?`<img src="${esc(s.thumbnailUrl)}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><span class="no-art" style="display:none">♪</span>`
       :`<span class="no-art">♪</span>`;
     const lnks=s.links.map((l,i)=>`<a class="link-pill" href="${esc(l)}" target="_blank" rel="noopener">🔗 Link ${i+1}</a>`).join('');
-    const ownerBtns=isOwner?`<div class="card-actions"><button class="icon-btn edit" onclick="openEdit(${s.id})" title="Bewerken">✏️</button><button class="icon-btn del" onclick="deleteSong(${s.id})" title="Verwijderen">🗑️</button></div>`:'';
+    const ownerBtns=(isOwner(s)||isAdmin())?`<div class="card-actions"><button class="icon-btn edit" onclick="openEdit(${s.id})" title="Bewerken">✏️</button><button class="icon-btn del" onclick="deleteSong(${s.id})" title="Verwijderen">🗑️</button></div>`:'';
     const quote=s.suggesterComment?`<div class="song-quote">"${esc(s.suggesterComment)}"</div>`:'';
+    // vote details
+    const upVoters=Object.entries(s.votes||{}).filter(([,v])=>v==='up').map(([uid])=>nameOf(uid));
+    const downVoters=Object.entries(s.votes||{}).filter(([,v])=>v==='down').map(([uid])=>nameOf(uid));
+    const vOpen=voteOpen[s.id];
+    const voteDetailsHtml=vOpen?`<div class="vote-details">
+      <div class="vote-group"><div class="vote-group-label">👍 Voor (${upVoters.length})</div>
+        ${upVoters.length?upVoters.map(n=>`<span class="vote-name up">✓ ${esc(n)}</span>`).join(''):`<span class="vote-name" style="color:var(--muted);font-style:italic">niemand</span>`}
+      </div>
+      <div class="vote-group"><div class="vote-group-label">👎 Tegen (${downVoters.length})</div>
+        ${downVoters.length?downVoters.map(n=>`<span class="vote-name down">✗ ${esc(n)}</span>`).join(''):`<span class="vote-name" style="color:var(--muted);font-style:italic">niemand</span>`}
+      </div>
+    </div>`:'';
+    // comments
     const open=cmntOpen[s.id];
     const cmntHtml=open?`<div class="cmnt-section">
-      <div class="cmnt-list">${s.comments.length?s.comments.map(c=>`<div class="cmnt-item"><span class="cmnt-author">${esc(c.author||'?')}</span>${esc(c.text)}</div>`).join(''):`<div class="cmnt-empty">Nog geen reacties.</div>`}</div>
+      <div class="cmnt-list">${s.comments.length
+        ?s.comments.map(c=>`<div class="cmnt-item"><span class="cmnt-author">${esc(nameOf(c.uid))}</span>${esc(c.text)}</div>`).join('')
+        :`<div class="cmnt-empty">Nog geen reacties.</div>`}
+      </div>
       <div class="cmnt-form"><input type="text" id="ci-${s.id}" placeholder="Schrijf een reactie…" onkeydown="if(event.key==='Enter')addComment(${s.id})"/><button class="cmnt-submit" onclick="addComment(${s.id})">Verstuur</button></div>
     </div>`:'';
+    const suggesterName=nameOf(s.suggesterUid)||s.suggesterName||'?';
     return`<div class="song-card">
       <div class="song-main">
         <a class="song-thumb" href="${esc(s.links[0]||'#')}" target="_blank" rel="noopener">${th}</a>
@@ -589,7 +725,7 @@ function renderSongs(){
             <div class="song-meta">
               <div class="song-title">${esc(s.title)}</div>
               <div class="song-artist">${esc(s.artist)}</div>
-              <div class="song-by">door <strong>${esc(s.suggesterName)}</strong></div>
+              <div class="song-by">door <strong>${esc(suggesterName)}</strong></div>
             </div>${ownerBtns}
           </div>
           <div class="song-links">${lnks}</div>${quote}
@@ -600,23 +736,40 @@ function renderSongs(){
           <button class="vote-btn up${myVote==='up'?' voted-up':''}" onclick="vote(${s.id},'up')">👍 ${s.upvotes}</button>
           <button class="vote-btn down${myVote==='down'?' voted-down':''}" onclick="vote(${s.id},'down')">👎 ${s.downvotes}</button>
         </div>
-        <span class="score ${scClass}">${scStr}</span>
+        <span class="score ${scClass}" style="cursor:pointer" onclick="toggleVotes(${s.id})" title="Wie heeft gestemd?">${scStr}</span>
         <button class="cmnt-toggle" onclick="toggleCmnt(${s.id})">💬 ${s.comments.length}</button>
-      </div>${cmntHtml}
+      </div>${voteDetailsHtml}${cmntHtml}
     </div>`;
   }).join('');
 }
 
 /* ── BOOTSTRAP ─────────────────────────────────── */
-document.getElementById('btn-set-user').onclick=()=>setUser(document.getElementById('inp-name').value);
-document.getElementById('inp-name').addEventListener('keydown',e=>{if(e.key==='Enter')setUser(document.getElementById('inp-name').value);});
+document.getElementById('btn-set-user').onclick=()=>registerUser(document.getElementById('inp-name').value);
+document.getElementById('inp-name').addEventListener('keydown',e=>{if(e.key==='Enter')registerUser(document.getElementById('inp-name').value);});
 document.getElementById('btn-add-song').onclick=addSong;
 
 async function init(){
-  try{const u=localStorage.getItem('sv_user');if(u){currentUser=u;document.getElementById('modal-user').style.display='none';}}catch{}
+  // Laad data eerst zodat we bestaande namen kunnen checken
+  await ghLoad();
+
+  // Haal uid op uit URL of localStorage
+  const urlUid=new URLSearchParams(location.search).get('uid');
+  const storedUid=(()=>{try{return localStorage.getItem('sv_uid');}catch{return null;}})();
+  const uid=urlUid||storedUid;
+
+  if(uid&&users[uid]){
+    // Bekende gebruiker — direct inloggen
+    currentUid=uid;
+    try{localStorage.setItem('sv_uid',uid);}catch{}
+    const url=new URL(location.href);
+    url.searchParams.set('uid',uid);
+    history.replaceState({},'',url.toString());
+    document.getElementById('modal-user').style.display='none';
+  }
+  // anders: modal blijft zichtbaar, gebruiker vult naam in
+
   renderHeader();
   updateAdminControls();
-  await ghLoad();
   renderSongs();
 }
 
