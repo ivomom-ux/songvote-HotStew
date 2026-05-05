@@ -36,16 +36,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .user-chip-name{font-size:13px;font-weight:600;color:#fff}
 .btn-change{background:none;border:none;font-size:11px;color:var(--muted);text-decoration:underline;padding:0 0 0 4px}
 .btn-change:hover{color:var(--text)}
-.dbx-btn{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:7px 14px;font-size:13px;color:var(--text);transition:.15s;white-space:nowrap;}
-.dbx-btn:hover{background:var(--s3)}
-.dbx-label{display:flex;flex-direction:column;line-height:1.2}
-.dbx-sub{font-size:10px;color:var(--muted)}
-.dbx-connected .dbx-sub{color:var(--green)}
-.dbx-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
-.dbx-connected .dbx-dot{background:var(--green);box-shadow:0 0 5px var(--green)}
+.sync-chip{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);padding:5px 10px;background:var(--s2);border:1px solid var(--border);border-radius:99px;}
+.sync-chip.saving{color:var(--gold);border-color:rgba(245,166,35,.3)}
+.sync-chip.saved{color:var(--green);border-color:rgba(0,200,150,.3)}
+.sync-chip.error{color:var(--accent);border-color:rgba(255,60,95,.3)}
 
 /* ── SYNC BAR ── */
-#sync-bar{background:rgba(0,97,255,.1);border-bottom:1px solid rgba(0,97,255,.18);padding:5px 18px;font-size:12px;color:#7ab4ff;display:none;align-items:center;gap:8px;}
+#sync-bar{background:rgba(0,200,150,.07);border-bottom:1px solid rgba(0,200,150,.15);padding:5px 18px;font-size:12px;color:#00c896;display:none;align-items:center;gap:8px;}
 .spin{display:inline-block;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -230,7 +227,7 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
 </header>
 
 <!-- SYNC BAR -->
-<div id="sync-bar"><span class="spin">⟳</span><span id="sync-msg">Synchroniseren…</span></div>
+<div id="sync-bar"><span class="spin">⟳</span><span id="sync-msg">Laden…</span></div>
 
 <!-- MAIN -->
 <main class="wrap" style="padding-top:30px;padding-bottom:20px">
@@ -277,99 +274,94 @@ footer{text-align:center;padding:28px 18px;font-size:12px;color:var(--muted);bor
   <div id="songs-list"></div>
 </main>
 
-<footer>SongVote · Data opgeslagen in Dropbox 📦</footer>
+<footer>SongVote · Data opgeslagen in GitHub 🐙</footer>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* ── CONFIG ── Pas dit aan! ──────────────────────── */
-const DBX_APP_KEY   = 'm658uto0la29462';   // ← stap 4 in de README
-const DBX_FILE_PATH = '/songvote_hotstew.json';  // pad in Dropbox
-const ADMIN_USER    = 'Ivo - trombone';                  // ← naam van de beheerder (JSON import/export)
-/* ─────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════
+   ⚙️  CONFIG — vul dit in!
+═══════════════════════════════════════════════════ */
+const GH_OWNER      = 'JOUW_GITHUB_GEBRUIKERSNAAM';  // ← bv. 'jandevries'
+const GH_REPO       = 'JOUW_REPOSITORY_NAAM';         // ← bv. 'songvote-hotstew'
+const GH_TOKEN      = 'JOUW_GITHUB_TOKEN';            // ← Personal Access Token
+const GH_DATA_FILE  = 'songvote_data.json';           // bestandsnaam in de repo
+const ADMIN_USER    = 'Jan';                           // naam van de beheerder
+/* ═══════════════════════════════════════════════════ */
 
-let songs       = [];
-let sortBy      = 'popularity';
-let sortOrder   = 'desc';
-let currentUser = null;
-let editingId   = null;
-let dbxToken    = null;
-let dbxSyncing  = false;
-let dbxTimer    = null;
-const cmntOpen  = {};
+let songs      = [];
+let sortBy     = 'popularity';
+let sortOrder  = 'desc';
+let currentUser= null;
+let editingId  = null;
+let saveTimer  = null;
+let isSaving   = false;
+const cmntOpen = {};
 
-/* ── DROPBOX PKCE AUTH ─────────────────────────── */
-async function sha256(str){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-  return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-}
-function rnd(n=64){
-  const a=new Uint8Array(n);crypto.getRandomValues(a);
-  return btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'').slice(0,n);
-}
-async function dbxLogin(){
-  const v=rnd(64),c=await sha256(v);
-  sessionStorage.setItem('dbx_v',v);
-  const base=location.href.split('?')[0].split('#')[0];
-  location.href=`https://www.dropbox.com/oauth2/authorize`
-    +`?client_id=${DBX_APP_KEY}&response_type=code`
-    +`&code_challenge=${c}&code_challenge_method=S256`
-    +`&redirect_uri=${encodeURIComponent(base)}&token_access_type=offline`;
-}
-async function dbxExchange(code){
-  const v=sessionStorage.getItem('dbx_v');if(!v)return null;
-  sessionStorage.removeItem('dbx_v');
-  const base=location.href.split('?')[0].split('#')[0];
-  const r=await fetch('https://api.dropboxapi.com/oauth2/token',{
-    method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body:new URLSearchParams({code,grant_type:'authorization_code',client_id:DBX_APP_KEY,code_verifier:v,redirect_uri:base})
-  });
-  const d=await r.json();
-  return d.access_token||null;
-}
-function dbxSave(t){dbxToken=t;try{localStorage.setItem('dbx_t',t);}catch{}}
-function dbxRead(){try{return localStorage.getItem('dbx_t');}catch{return null;}}
-function dbxLogout(){dbxToken=null;try{localStorage.removeItem('dbx_t');}catch{}renderHeader();toast('Dropbox verbinding verbroken','info');}
+/* ── GITHUB API ────────────────────────────────── */
+const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}`;
 
-/* ── DROPBOX DATA ──────────────────────────────── */
-async function dbxLoad(){
-  if(!dbxToken)return;
-  showSync('Laden vanuit Dropbox…');
+async function ghLoad(){
+  showSync('Lijst laden…');
   try{
-    const r=await fetch('https://content.dropboxapi.com/2/files/download',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+dbxToken,'Dropbox-API-Arg':JSON.stringify({path:DBX_FILE_PATH})}
-    });
-    if(r.status===409){hideSync();return;} // file doesn't exist yet
-    if(r.status===401){dbxToken=null;renderHeader();toast('Dropbox sessie verlopen','err');hideSync();return;}
-    if(!r.ok){hideSync();return;}
+    // Lezen via de publieke raw URL — geen auth nodig
+    const url=`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_DATA_FILE}?t=${Date.now()}`;
+    const r=await fetch(url);
+    if(r.status===404){hideSync();return;} // bestand bestaat nog niet
+    if(!r.ok){hideSync();toast('Laden mislukt','err');return;}
     const data=await r.json();
-    if(Array.isArray(data)){songs=data;}
-  }catch(e){console.warn('dbxLoad',e);}
+    if(Array.isArray(data))songs=data;
+  }catch(e){console.warn('ghLoad',e);toast('Laden mislukt','err');}
   hideSync();
 }
-async function dbxWrite(){
-  if(!dbxToken||dbxSyncing)return;
-  dbxSyncing=true;showSync('Opslaan in Dropbox…');
+
+async function ghSave(){
+  if(isSaving)return;
+  isSaving=true;
+  showSync('Opslaan…');
   try{
-    const r=await fetch('https://content.dropboxapi.com/2/files/upload',{
-      method:'POST',
-      headers:{
-        'Authorization':'Bearer '+dbxToken,
-        'Content-Type':'application/octet-stream',
-        'Dropbox-API-Arg':JSON.stringify({path:DBX_FILE_PATH,mode:'overwrite',autorename:false,mute:true})
-      },
-      body:new Blob([JSON.stringify(songs,null,2)])
+    // Haal de huidige SHA op (nodig voor update)
+    const metaR=await fetch(GH_API,{
+      headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json'}
     });
-    if(r.ok)toast('Opgeslagen in Dropbox ✓','ok');
-    else if(r.status===401){dbxToken=null;renderHeader();toast('Dropbox sessie verlopen','err');}
-    else toast('Opslaan mislukt','err');
-  }catch{toast('Geen verbinding met Dropbox','err');}
-  dbxSyncing=false;hideSync();
+    let sha=null;
+    if(metaR.ok){const meta=await metaR.json();sha=meta.sha;}
+
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(songs,null,2))));
+    const body={message:'💾 SongVote update',content};
+    if(sha)body.sha=sha;
+
+    const r=await fetch(GH_API,{
+      method:'PUT',
+      headers:{
+        'Authorization':`Bearer ${GH_TOKEN}`,
+        'Accept':'application/vnd.github+json',
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(body)
+    });
+
+    if(r.ok)toast('Opgeslagen ✓','ok');
+    else{
+      const err=await r.json();
+      console.error('ghSave error',err);
+      toast('Opslaan mislukt','err');
+    }
+  }catch(e){console.warn('ghSave',e);toast('Geen verbinding','err');}
+  isSaving=false;
+  hideSync();
 }
-function scheduleSave(){clearTimeout(dbxTimer);dbxTimer=setTimeout(dbxWrite,1400);}
-function showSync(m){document.getElementById('sync-msg').textContent=m;document.getElementById('sync-bar').style.display='flex';}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(ghSave,1400);
+}
+
+function showSync(m){
+  document.getElementById('sync-msg').textContent=m;
+  document.getElementById('sync-bar').style.display='flex';
+}
 function hideSync(){document.getElementById('sync-bar').style.display='none';}
 
 /* ── TOAST ─────────────────────────────────────── */
@@ -411,15 +403,14 @@ function renderHeader(){
   if(currentUser){
     h+=`<div class="user-chip"><span class="user-dot"></span><span class="user-chip-name">${esc(currentUser)}</span><button class="btn-change" onclick="changeUser()">wijzig</button></div>`;
   }
-  if(dbxToken){
-    h+=`<button class="dbx-btn dbx-connected" onclick="dbxLogout()">${dbxSvg()}<span class="dbx-label"><span>Dropbox</span><span class="dbx-sub">Verbonden ✓</span></span><span class="dbx-dot"></span></button>`;
-  } else {
-    h+=`<button class="dbx-btn" onclick="dbxLogin()">${dbxSvg()}<span class="dbx-label"><span>Verbind Dropbox</span><span class="dbx-sub">Niet verbonden</span></span><span class="dbx-dot"></span></button>`;
-  }
   hr.innerHTML=h;
 }
-function dbxSvg(){
-  return`<svg width="18" height="18" viewBox="0 0 40 40"><path d="M20 6.5L10 13l10 6.5-10 6.5L20 32.5l10-6.5-10-6.5 10-6.5L20 6.5z" fill="#0061FF"/></svg>`;
+
+/* ── ADMIN ─────────────────────────────────────── */
+function updateAdminControls(){
+  const isAdmin=currentUser&&currentUser.trim().toLowerCase()===ADMIN_USER.trim().toLowerCase();
+  document.getElementById('btn-import').style.display=isAdmin?'inline-flex':'none';
+  document.getElementById('btn-export').style.display=isAdmin?'inline-flex':'none';
 }
 
 /* ── LINKS HELPERS ─────────────────────────────── */
@@ -519,13 +510,6 @@ document.querySelectorAll('[data-order]').forEach(b=>b.onclick=()=>{
   renderSongs();
 });
 
-/* ── ADMIN CHECK ───────────────────────────────── */
-function updateAdminControls(){
-  const isAdmin = currentUser && currentUser.trim().toLowerCase() === ADMIN_USER.trim().toLowerCase();
-  document.getElementById('btn-import').style.display = isAdmin ? 'inline-flex' : 'none';
-  document.getElementById('btn-export').style.display = isAdmin ? 'inline-flex' : 'none';
-}
-
 /* ── IMPORT / EXPORT (admin only) ─────────────── */
 document.getElementById('btn-export').onclick=()=>{
   const blob=new Blob([JSON.stringify(songs,null,2)],{type:'application/json'});
@@ -544,7 +528,7 @@ document.getElementById('file-import').onchange=e=>{
   r.readAsText(f);e.target.value='';
 };
 
-/* ── WHATSAPP EXPORT (iedereen) ────────────────── */
+/* ── WHATSAPP EXPORT ───────────────────────────── */
 function buildWhatsAppText(){
   const sorted=[...songs].sort((a,b)=>(b.upvotes-b.downvotes)-(a.upvotes-a.downvotes));
   const date=new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
@@ -561,14 +545,10 @@ document.getElementById('btn-whatsapp').onclick=()=>{
   document.getElementById('whatsapp-text').value=buildWhatsAppText();
   document.getElementById('modal-whatsapp').style.display='flex';
 };
-document.getElementById('btn-whatsapp-close').onclick=()=>{
-  document.getElementById('modal-whatsapp').style.display='none';
-};
+document.getElementById('btn-whatsapp-close').onclick=()=>{document.getElementById('modal-whatsapp').style.display='none';};
 document.getElementById('btn-whatsapp-copy').onclick=()=>{
   const ta=document.getElementById('whatsapp-text');
-  navigator.clipboard.writeText(ta.value).then(()=>toast('Gekopieerd! 🎉')).catch(()=>{
-    ta.select();document.execCommand('copy');toast('Gekopieerd!');
-  });
+  navigator.clipboard.writeText(ta.value).then(()=>toast('Gekopieerd! 🎉')).catch(()=>{ta.select();document.execCommand('copy');toast('Gekopieerd!');});
 };
 
 /* ── RENDER ────────────────────────────────────── */
@@ -603,7 +583,7 @@ function renderSongs(){
     </div>`:'';
     return`<div class="song-card">
       <div class="song-main">
-        <a class="song-thumb" href="${esc(s.links[0])}" target="_blank" rel="noopener">${th}</a>
+        <a class="song-thumb" href="${esc(s.links[0]||'#')}" target="_blank" rel="noopener">${th}</a>
         <div class="song-body">
           <div class="song-top">
             <div class="song-meta">
@@ -634,23 +614,9 @@ document.getElementById('btn-add-song').onclick=addSong;
 
 async function init(){
   try{const u=localStorage.getItem('sv_user');if(u){currentUser=u;document.getElementById('modal-user').style.display='none';}}catch{}
-
-  const params=new URLSearchParams(location.search);
-  const code=params.get('code');
-  if(code){
-    history.replaceState({},'',location.pathname);
-    showSync('Verbinden met Dropbox…');
-    const token=await dbxExchange(code);
-    if(token){dbxSave(token);toast('Dropbox verbonden! 🎉','ok');}
-    else toast('Verbinden mislukt — probeer opnieuw','err');
-    hideSync();
-  } else {
-    const t=dbxRead();if(t)dbxToken=t;
-  }
-
   renderHeader();
   updateAdminControls();
-  if(dbxToken)await dbxLoad();
+  await ghLoad();
   renderSongs();
 }
 
