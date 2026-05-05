@@ -1,90 +1,102 @@
 # SongVote 🎸 — Setup instructies
 
 SongVote is een webapp waarmee jij en je bandleden nummers kunnen voorstellen en op stemmen.
-Alle data wordt opgeslagen in **één gedeeld JSON-bestand** in Dropbox, zodat iedereen altijd de nieuwste lijst ziet.
+Data wordt opgeslagen als een JSON-bestand in je GitHub repository — **bandleden hoeven nergens op in te loggen**, ze openen gewoon de link.
 
-Je kunt SongVote voor **meerdere bands** gebruiken — elke band krijgt zijn eigen link en eigen Dropbox-bestand.
+---
+
+## Hoe het werkt
+
+- `songvote_data.json` staat in je GitHub repository
+- De app **leest** dit bestand direct via de publieke GitHub URL (geen login nodig)
+- De app **schrijft** via de GitHub API met een token dat jij instelt — dit staat veilig in de code, alleen jij ziet het
+- Bandleden openen gewoon de link en stemmen meteen
 
 ---
 
 ## Wat je nodig hebt
 
 - Een gratis **GitHub** account → [github.com](https://github.com)
-- Een **Dropbox** account (je hebt er al één)
-- Ongeveer **10 minuten** voor de eerste band, **5 minuten** voor elke volgende
+- Ongeveer **15 minuten** voor de eerste keer
 
 ---
 
-## Eerste keer: GitHub account aanmaken
+## Eenmalige setup: GitHub account aanmaken
 
 1. Ga naar [github.com/signup](https://github.com/signup)
-2. Maak een gratis account aan
-3. Bevestig je e-mailadres
-
-Dit doe je maar één keer.
+2. Maak een gratis account aan en bevestig je e-mailadres
 
 ---
 
 ## Één band instellen
 
-Volg deze stappen voor elke band. Kies een korte naam zonder spaties, bv. `the-rollingbones` of `jazzband`.
-
-### Stap 1 — Repository aanmaken op GitHub
+### Stap 1 — Repository aanmaken
 
 1. Log in op GitHub
 2. Klik rechtsboven op **"+"** → **"New repository"**
-3. Geef het de naam: `songvote-BANDNAAM` (bv. `songvote-the-rollingbones`)
-4. Zet het op **Public**
+3. Naam: `songvote-BANDNAAM` (bv. `songvote-hotstew`)
+4. Zet op **Public**
 5. Vink aan: **"Add a README file"**
 6. Klik op **"Create repository"**
 
-### Stap 2 — index.html uploaden
+---
 
-1. Open de nieuwe repository
-2. Klik op **"Add file"** → **"Upload files"**
-3. Sleep `index.html` naar het uploadvenster
+### Stap 2 — Bestanden uploaden
+
+Upload de volgende bestanden naar je repository via **"Add file" → "Upload files"**:
+
+- `index.html` — de app
+- `songvote_data.json` — de data (begin met een leeg bestand: `[]`)
+
+Voor het mapje `.github/workflows/` (GitHub Action):
+1. Klik op **"Add file" → "Create new file"**
+2. Typ als bestandsnaam: `.github/workflows/save-data.yml`
+3. Kopieer de inhoud van `save-data.yml` uit de zip en plak het in het tekstveld
 4. Klik op **"Commit changes"**
 
-### Stap 3 — Dropbox App aanmaken
+---
 
-Elke band krijgt zijn eigen Dropbox app (en dus eigen data).
+### Stap 3 — Personal Access Token aanmaken
 
-1. Ga naar [dropbox.com/developers/apps](https://www.dropbox.com/developers/apps)
-2. Klik op **"Create app"**
-3. Kies:
-   - **Scoped access**
-   - **Full Dropbox**
-4. Geef de app een naam, bv. `SongVote-the-rollingbones`
-5. Klik op **"Create app"**
+Dit is het "sleuteltje" waarmee de app data kan opslaan.
 
-Je zit nu in het dashboard van je app.
+1. Ga naar [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Klik op **"Generate new token (classic)"**
+3. Geef het een naam: `SongVote`
+4. Stel de vervaldatum in op **"No expiration"** (of een jaar)
+5. Vink aan: **`repo`** (de hele sectie)
+6. Klik op **"Generate token"**
+7. **Kopieer de token meteen** — je ziet hem maar één keer!
 
-6. Scroll naar **"OAuth 2"** → **"Redirect URIs"**
-7. Voeg toe: `https://JOUWGEBRUIKERSNAAM.github.io/songvote-BANDNAAM/`
-   *(let op de `/` aan het einde!)*
-8. Klik op **"Add"**
-9. Kopieer de **"App key"** bovenaan de pagina
+---
 
-### Stap 4 — App Key en bestandsnaam invullen in de code
+### Stap 4 — Token en config invullen in index.html
 
-1. Ga naar je GitHub repository
+1. Ga naar je repository op GitHub
 2. Klik op `index.html` → klik op het **potloodje** (Edit)
-3. Zoek en pas deze twee regels aan:
-   ```javascript
-   const DBX_APP_KEY   = 'JOUW_APP_KEY_HIER';   // ← jouw App key
-   const DBX_FILE_PATH = '/songvote_data.json';  // ← geef het een unieke naam per band
-   ```
-   Bv. voor "The Rolling Bones":
-   ```javascript
-   const DBX_APP_KEY   = 'abc123xyz456';
-   const DBX_FILE_PATH = '/songvote_the-rollingbones.json';
-   ```
-   > 💡 Door het JSON-bestand een unieke naam te geven kunnen bandleden die bij meerdere bands zitten gewoon hun eigen Dropbox gebruiken zonder dat de data door elkaar loopt.
-4. Klik op **"Commit changes"**
+3. Zoek bovenaan het script-blok deze regels:
+
+```javascript
+const GH_OWNER      = 'JOUW_GITHUB_GEBRUIKERSNAAM';
+const GH_REPO       = 'JOUW_REPOSITORY_NAAM';
+const GH_TOKEN      = 'JOUW_GITHUB_TOKEN';
+const GH_DATA_FILE  = 'songvote_data.json';
+const ADMIN_USER    = 'Jan';
+```
+
+4. Vul in:
+   - `GH_OWNER` → jouw GitHub gebruikersnaam (bv. `'jandevries'`)
+   - `GH_REPO` → naam van de repository (bv. `'songvote-hotstew'`)
+   - `GH_TOKEN` → de token die je zojuist hebt gekopieerd
+   - `ADMIN_USER` → jouw naam zoals je die in de app invult (voor import/export)
+
+5. Klik op **"Commit changes"**
+
+---
 
 ### Stap 5 — GitHub Pages inschakelen
 
-1. Ga naar **Settings** in de repository
+1. Ga naar **Settings** in je repository
 2. Klik links op **"Pages"**
 3. Kies onder "Branch": **main** → **/ (root)**
 4. Klik op **"Save"**
@@ -92,34 +104,28 @@ Je zit nu in het dashboard van je app.
 Na 1-2 minuten is de app live op:
 **`https://JOUWGEBRUIKERSNAAM.github.io/songvote-BANDNAAM/`**
 
-### Stap 6 — Link delen met de band
+---
 
-Stuur de link naar je bandleden. Iedereen:
-1. Opent de link
-2. Voert hun naam in
-3. Klikt op **"Verbind Dropbox"** en logt in met hun eigen Dropbox
-4. Klaar — alle stemmen worden automatisch gesynchroniseerd
+### Stap 6 — Link delen
+
+Stuur de link naar je bandleden. Ze openen hem, voeren hun naam in en kunnen meteen stemmen. Geen account, geen login.
 
 ---
 
-## Meerdere bands: overzicht
+## Meerdere bands
 
-Na de eerste keer zijn stap 3, 4 en 5 het enige dat je per band opnieuw doet.
+Per band herhaal je stap 1 t/m 5 met een andere repository naam. De token kun je hergebruiken.
 
-| Band | Repository | App-link | Dropbox-bestand |
-|---|---|---|---|
-| The Rolling Bones | `songvote-the-rollingbones` | `...github.io/songvote-the-rollingbones/` | `songvote_the-rollingbones.json` |
-| Jazzband | `songvote-jazzband` | `...github.io/songvote-jazzband/` | `songvote_jazzband.json` |
-| enz. | `songvote-...` | `...github.io/songvote-.../` | `songvote_....json` |
+| Band | Repository | Link |
+|---|---|---|
+| HotStew | `songvote-hotstew` | `...github.io/songvote-hotstew/` |
+| Jazzband | `songvote-jazzband` | `...github.io/songvote-jazzband/` |
 
 ---
 
-## Hoe werkt de synchronisatie?
+## Data inzien of aanpassen
 
-- Data wordt opgeslagen in één JSON-bestand per band in Dropbox
-- Elke wijziging (nummer toevoegen, stemmen, reactie) wordt automatisch opgeslagen
-- Bij het openen van de app wordt de nieuwste data ingeladen
-- Voor een kleine band (onder 10 mensen) is gelijktijdig gebruik geen probleem in de praktijk
+Het bestand `songvote_data.json` staat gewoon zichtbaar in je repository. Je kunt het daar altijd openen, bekijken en handmatig aanpassen. Elke opslag vanuit de app verschijnt als een commit in de geschiedenis — zo kun je altijd terugkijken of terugdraaien.
 
 ---
 
@@ -127,8 +133,8 @@ Na de eerste keer zijn stap 3, 4 en 5 het enige dat je per band opnieuw doet.
 
 | Probleem | Oplossing |
 |---|---|
-| "Verbinden mislukt" na Dropbox login | Controleer of de Redirect URI exact overeenkomt met de app-link, inclusief `/` aan het einde |
-| Data van verkeerde band zichtbaar | Controleer of `DBX_FILE_PATH` per band een unieke naam heeft |
-| Lege lijst na inloggen | Het bestand bestaat nog niet — voeg een eerste nummer toe |
+| Lege lijst bij openen | Controleer of `songvote_data.json` bestaat in de repo (inhoud: `[]`) |
+| "Opslaan mislukt" | Controleer of `GH_TOKEN` correct is ingevuld en `repo`-rechten heeft |
 | App niet bereikbaar | Wacht 2 minuten na het inschakelen van GitHub Pages |
-| Wijzigingen niet zichtbaar voor anderen | Ververs de pagina — de app laadt bij elke pageload de nieuwste data |
+| Wijzigingen niet zichtbaar voor anderen | Ververs de pagina — bij elke pageload wordt de nieuwste data geladen |
+| Token verlopen | Maak een nieuw token aan via github.com/settings/tokens en vul hem in |
