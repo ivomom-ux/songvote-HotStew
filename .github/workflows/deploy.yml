@@ -20,7 +20,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Inject GitHub token into config
-        run: sed -i "s|'GH_TOKEN'|'${{ secrets.GH_TOKEN }}'|g" config.js
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          sed -i "s|'GH_TOKEN'|'${TOKEN}'|g" config.js
+          grep -q "'GH_TOKEN'" config.js && echo "WARNING: token was NOT replaced" || echo "Token injected successfully"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
