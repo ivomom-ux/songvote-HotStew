@@ -7,7 +7,7 @@ const CONFIG = {
   // GitHub instellingen
   GH_OWNER:     'ivomom-ux',  // bv. 'ivomom-ux'
   GH_REPO:      'songvote-HotStew',         // bv. 'songvote-HotStew'
-  GH_TOKEN:     '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 ',            // bv. 'ghp_abc123...'
+  GH_TOKEN:     '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',            // bv. 'ghp_abc123...'
   GH_DATA_FILE: 'songvote_data.json',           // bestandsnaam in de repo
 
   // Naam van de beheerder (krijgt import/export/gebruikersbeheer)
