@@ -2,5 +2,22 @@
   "users": {
     "rohexrj01o73": "Ivo - trombone"
   },
-  "songs": []
+  "songs": [
+    {
+      "id": 1778179216102,
+      "title": "Sex Machine",
+      "artist": "James Brown",
+      "links": [
+        "https://youtu.be/bC5VhVbDw0o?si=Hrz4F3WKIF6Bd5CU"
+      ],
+      "suggesterComment": "Funky!",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/bC5VhVbDw0o/mqdefault.jpg",
+      "upvotes": 0,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {}
+    }
+  ]
 }
