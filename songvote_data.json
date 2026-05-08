@@ -1,16 +1,449 @@
 {
   "users": {
-    "rohexrj01o73": "Ivo - trombone"
+    "mk2a4b6c8d0e": "1",
+    "db3f5g7h9i1j": "2",
+    "mt4k6l8m0n2o": "3",
+    "fk5p7q9r1s3t": "4",
+    "ev6u8v0w2x4y": "5",
+    "ml7z9a1b3c5d": "6",
+    "jn9j1k3l5m7n": "7",
+    "rohexrj01o73": "Ivo - trombone",
+    "is9o8p7q6r5s": "8"
   },
   "songs": [
     {
-      "id": 1778179216102,
+      "id": 1000000000000,
+      "title": "Groove is in the heart",
+      "artist": "Wonderbrass",
+      "links": [
+        "https://www.youtube.com/watch?v=aMltXhYNyvk&t=7s"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/aMltXhYNyvk/mqdefault.jpg",
+      "upvotes": 8,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "up",
+        "fk5p7q9r1s3t": "up",
+        "ev6u8v0w2x4y": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000001,
+      "title": "Never gonna give you up",
+      "artist": "Rick Astley",
+      "links": [
+        "https://www.youtube.com/watch?v=nsCIeklgp1M&t=383s"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/nsCIeklgp1M/mqdefault.jpg",
+      "upvotes": 7,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "up",
+        "fk5p7q9r1s3t": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000002,
+      "title": "Levitating",
+      "artist": "Dua Lipa",
+      "links": [
+        "https://www.youtube.com/watch?v=9CmPs0ul5OU&list=RD9CmPs0ul5OU&start_radio=1"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/9CmPs0ul5OU/mqdefault.jpg",
+      "upvotes": 7,
+      "downvotes": 1,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "up",
+        "fk5p7q9r1s3t": "down",
+        "ev6u8v0w2x4y": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000003,
+      "title": "Now that we found love",
+      "artist": "Boston tea party",
+      "links": [
+        "https://www.youtube.com/watch?v=3D6iNvXEh_c&list=PLLeRfEHYu573dleQwIY0Ir0o0iFi_F-jf&index=1"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/3D6iNvXEh_c/mqdefault.jpg",
+      "upvotes": 6,
+      "downvotes": 1,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "down",
+        "fk5p7q9r1s3t": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000004,
+      "title": "Abba Medley",
+      "artist": "Abba",
+      "links": [
+        "https://www.dropbox.com/scl/fi/53k6sb15fucl2ybfndy3h/Abba-medley-16-09-2025-22.08.mp3?rlkey=6gax69c576s53m81iwowzcd5v&st=9hryfwtf&dl=0"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "placeholder",
+      "upvotes": 7,
+      "downvotes": 1,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "up",
+        "fk5p7q9r1s3t": "down",
+        "ev6u8v0w2x4y": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000005,
+      "title": "I want you back",
+      "artist": "Michael Jackson",
+      "links": [
+        "https://www.youtube.com/watch?v=LWwhK8AVpqQ&t=8s"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/LWwhK8AVpqQ/mqdefault.jpg",
+      "upvotes": 5,
+      "downvotes": 1,
+      "comments": [],
+      "votes": {
+        "db3f5g7h9i1j": "down",
+        "mt4k6l8m0n2o": "up",
+        "fk5p7q9r1s3t": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000006,
+      "title": "Jump & I'm so excited",
+      "artist": "Pointer sisters",
+      "links": [
+        "https://www.youtube.com/watch?v=Bxxs6k9oCmI&list=RDBxxs6k9oCmI&start_radio=1"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/Bxxs6k9oCmI/mqdefault.jpg",
+      "upvotes": 4,
+      "downvotes": 2,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "down",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "down",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000007,
+      "title": "September",
+      "artist": "Earth Wind and Fire",
+      "links": [
+        "https://www.youtube.com/watch?v=Gs069dndIYk"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/Gs069dndIYk/mqdefault.jpg",
+      "upvotes": 3,
+      "downvotes": 2,
+      "comments": [],
+      "votes": {
+        "db3f5g7h9i1j": "up",
+        "fk5p7q9r1s3t": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "down",
+        "is9o8p7q6r5s": "down"
+      }
+    },
+    {
+      "id": 1000000000008,
+      "title": "Never Too Much",
+      "artist": "Luther Vandross (Cover) by David Latulippe",
+      "links": [
+        "https://youtu.be/YPZO4aXO6hA?si=Al0WS7Ff7JJTF4BY"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/YPZO4aXO6hA/mqdefault.jpg",
+      "upvotes": 4,
+      "downvotes": 2,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "down",
+        "db3f5g7h9i1j": "up",
+        "mt4k6l8m0n2o": "up",
+        "fk5p7q9r1s3t": "down",
+        "ml7z9a1b3c5d": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000009,
+      "title": "Livin' on a Prayer",
+      "artist": "Soul Jovi",
+      "links": [
+        "https://www.youtube.com/watch?v=G8VxRfTh6AA&t=21s"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/G8VxRfTh6AA/mqdefault.jpg",
+      "upvotes": 3,
+      "downvotes": 4,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "down",
+        "db3f5g7h9i1j": "down",
+        "mt4k6l8m0n2o": "down",
+        "fk5p7q9r1s3t": "up",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "down",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000010,
+      "title": "Crosstown traffic",
+      "artist": "Jonah Smith",
+      "links": [
+        "https://www.youtube.com/watch?v=dIbTpx3qbjQ&t=50s"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/dIbTpx3qbjQ/mqdefault.jpg",
+      "upvotes": 2,
+      "downvotes": 5,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "down",
+        "db3f5g7h9i1j": "down",
+        "mt4k6l8m0n2o": "down",
+        "fk5p7q9r1s3t": "down",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "down",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000011,
+      "title": "Sunny",
+      "artist": "Jamiroquai",
+      "links": [
+        "https://www.youtube.com/watch?v=Gw-M58IjIuI&list=RDGw-M58IjIuI&start_radio=1"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/Gw-M58IjIuI/mqdefault.jpg",
+      "upvotes": 3,
+      "downvotes": 4,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "down",
+        "db3f5g7h9i1j": "down",
+        "mt4k6l8m0n2o": "down",
+        "fk5p7q9r1s3t": "up",
+        "ev6u8v0w2x4y": "down",
+        "ml7z9a1b3c5d": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000012,
+      "title": "Bad girls in een mix met Thriller en Raining man",
+      "artist": "Diverse",
+      "links": [
+        "https://www.dropbox.com/scl/fi/rgqepuo5sbodvrmbwoyn0/Bad-girls-thriller-raining-man-06-11-2025-22.04-V3.mp3?rlkey=pp37040upwepm1iotiohe9azv&dl=0"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "placeholder",
+      "upvotes": 3,
+      "downvotes": 1,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "fk5p7q9r1s3t": "down",
+        "ml7z9a1b3c5d": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000013,
+      "title": "Funkytown mashup met you should be dancing",
+      "artist": "Lipps Inc.",
+      "links": [
+        "https://www.youtube.com/watch?v=uhzy7JaU2Zc&list=RDuhzy7JaU2Zc&start_radio=1"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/uhzy7JaU2Zc/mqdefault.jpg",
+      "upvotes": 3,
+      "downvotes": 2,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "up",
+        "mt4k6l8m0n2o": "down",
+        "fk5p7q9r1s3t": "down",
+        "ml7z9a1b3c5d": "up",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000014,
+      "title": "Let's get the party started",
+      "artist": "Pink",
+      "links": [
+        "https://www.youtube.com/watch?v=Hg-_uxD3H80&list=RDHg-_uxD3H80&start_radio=1"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/Hg-_uxD3H80/mqdefault.jpg",
+      "upvotes": 2,
+      "downvotes": 6,
+      "comments": [],
+      "votes": {
+        "mk2a4b6c8d0e": "down",
+        "db3f5g7h9i1j": "down",
+        "mt4k6l8m0n2o": "down",
+        "fk5p7q9r1s3t": "down",
+        "ev6u8v0w2x4y": "down",
+        "ml7z9a1b3c5d": "up",
+        "jn9j1k3l5m7n": "down",
+        "is9o8p7q6r5s": "up"
+      }
+    },
+    {
+      "id": 1000000000015,
+      "title": "make my day",
+      "artist": "toots/daryl",
+      "links": [
+        "https://youtu.be/YtTn6ENNGXQ"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/YtTn6ENNGXQ/mqdefault.jpg",
+      "upvotes": 1,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {
+        "fk5p7q9r1s3t": "up"
+      }
+    },
+    {
+      "id": 1000000000016,
+      "title": "ivin it up for love",
+      "artist": "delbert mcclinton",
+      "links": [
+        "https://www.facebook.com/share/v/1CVhQWtoQH/?mibextid=wwXIfr"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "placeholder",
+      "upvotes": 1,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {
+        "fk5p7q9r1s3t": "up"
+      }
+    },
+    {
+      "id": 1000000000017,
+      "title": "Don't Start Now",
+      "artist": "Dua Lipa",
+      "links": [
+        "https://www.youtube.com/watch?v=oygrmJFKYZY"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/oygrmJFKYZY/mqdefault.jpg",
+      "upvotes": 1,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {
+        "ev6u8v0w2x4y": "up"
+      }
+    },
+    {
+      "id": 1000000000018,
+      "title": "Where the hell is my husband",
+      "artist": "Raye",
+      "links": [
+        "https://youtu.be/CpKcoHrWTF8?si=0XcDO6njfpBV1i3e",
+        "https://open.spotify.com/track/7eYzn1CuiJK6VvUhf8zA6k?si=d72348b0fc874997"
+      ],
+      "suggesterComment": "",
+      "suggesterUid": "rohexrj01o73",
+      "suggesterName": "Ivo - trombone",
+      "thumbnailUrl": "https://img.youtube.com/vi/CpKcoHrWTF8/mqdefault.jpg",
+      "upvotes": 0,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {}
+    },
+    {
+      "id": 1000000000019,
       "title": "Sex Machine",
       "artist": "James Brown",
       "links": [
         "https://youtu.be/bC5VhVbDw0o?si=Hrz4F3WKIF6Bd5CU"
       ],
-      "suggesterComment": "Funky!",
+      "suggesterComment": "",
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo - trombone",
       "thumbnailUrl": "https://img.youtube.com/vi/bC5VhVbDw0o/mqdefault.jpg",
@@ -18,7 +451,7 @@
       "downvotes": 0,
       "comments": [],
       "votes": {
-        "rohexrj01o73": "up"
+        "is9o8p7q6r5s": "up"
       }
     }
   ]
