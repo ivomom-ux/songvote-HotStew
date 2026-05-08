@@ -206,10 +206,7 @@ function renderHeader() {
       <span class="user-dot"></span>
       <span class="user-chip-name">${esc(myName())}</span>
       <button class="btn-change" onclick="changeUser()">wijzig</button>
-<<<<<<< HEAD
       <button class="btn-change" onclick="shareMyLink()" title="Kopieer jouw persoonlijke inloglink">🔗 deel link</button>
-=======
->>>>>>> c0be50f3b190c4236433916244ffac50a2fb4825
     </div>`;
   }
   hr.innerHTML = h;
