@@ -430,7 +430,9 @@ function renderSongs() {
     const c = sortBy === 'popularity'
       ? (a.upvotes - a.downvotes) - (b.upvotes - b.downvotes)
       : a.title.localeCompare(b.title, 'nl');
-    return sortOrder === 'asc' ? c : -c;
+    return sortBy === 'popularity'
+      ? (sortOrder === 'asc' ? c : -c)
+      : (sortOrder === 'desc' ? c : -c);
   });
 
   const el = document.getElementById('songs-list');
