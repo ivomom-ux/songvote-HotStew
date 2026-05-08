@@ -1,0 +1,4 @@
+# Local config override — put real tokens here, never commit this file
+config.local.js
+.env
+.env.local

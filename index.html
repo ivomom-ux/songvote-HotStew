@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SongVote 🎸</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── USER MODAL ── -->
+  <div class="overlay" id="modal-user">
+    <div class="modal">
+      <div class="modal-title">Welkom bij SongVote 🎸</div>
+      <div class="modal-sub">Voer je naam in zodat de band weet wie wat voorstelt en stemt.</div>
+      <div class="field">
+        <label for="inp-name">Jouw naam</label>
+        <input type="text" id="inp-name" placeholder="bv. Jan" autocomplete="off"/>
+        <p class="field-error" id="inp-name-err" style="display:none"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-set-user">Opslaan en doorgaan →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EDIT MODAL ── -->
+  <div class="overlay" id="modal-edit" style="display:none">
+    <div class="modal wide">
+      <div class="modal-title">Nummer bewerken</div>
+      <div class="two-col">
+        <div class="field"><label>Titel</label><input type="text" id="edit-title"/></div>
+        <div class="field"><label>Artiest</label><input type="text" id="edit-artist"/></div>
+      </div>
+      <div class="field">
+        <label>Links</label>
+        <div id="edit-links-wrap"></div>
+        <button class="btn-addlink" id="btn-edit-addlink">+ link toevoegen</button>
+      </div>
+      <div class="field"><label>Toelichting</label><textarea id="edit-comment" rows="3"></textarea></div>
+      <p class="field-error" id="edit-err" style="display:none"></p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-edit-cancel">Annuleren</button>
+        <button class="btn-primary" id="btn-edit-save">Opslaan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── USERS MODAL ── -->
+  <div class="overlay" id="modal-users" style="display:none">
+    <div class="modal wide">
+      <div class="modal-title">👥 Gebruikers beheren</div>
+      <div class="modal-sub">Verwijder een gebruiker inclusief al zijn stemmen, reacties en voorgestelde nummers.</div>
+      <div id="users-list"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-users-close">Sluiten</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WHATSAPP MODAL ── -->
+  <div class="overlay" id="modal-whatsapp" style="display:none">
+    <div class="modal wide">
+      <div class="modal-title">📋 WhatsApp lijst</div>
+      <div class="modal-sub">Kopieer en plak dit in jullie WhatsApp-groep.</div>
+      <textarea id="whatsapp-text" rows="14" style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:9px;padding:12px;color:var(--text);font-size:13px;line-height:1.6;resize:vertical" readonly></textarea>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-whatsapp-close">Sluiten</button>
+        <button class="btn-primary" id="btn-whatsapp-copy">📋 Kopieer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header id="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="logo">Song<em>Vote</em></div>
+        <div class="tagline">Stel voor · Stem · Discussieer</div>
+      </div>
+      <div class="header-right" id="header-right"></div>
+    </div>
+  </header>
+
+  <!-- ── SYNC BAR ── -->
+  <div id="sync-bar">
+    <span class="spin">⟳</span>
+    <span id="sync-msg">Laden…</span>
+  </div>
+
+  <!-- ── MAIN ── -->
+  <main class="wrap" style="padding-top:30px;padding-bottom:20px">
+
+    <!-- Nummer toevoegen -->
+    <div class="form-card">
+      <div class="form-card-title">Stel een nummer voor</div>
+      <div class="two-col">
+        <div class="field"><label>Titel</label><input type="text" id="new-title" placeholder="bv. Bohemian Rhapsody"/></div>
+        <div class="field"><label>Artiest</label><input type="text" id="new-artist" placeholder="bv. Queen"/></div>
+      </div>
+      <div class="field">
+        <label>Links <span style="text-transform:none;font-weight:400">(YouTube, Spotify, …)</span></label>
+        <div id="new-links-wrap"><div class="link-row"><input type="url" placeholder="https://…"/></div></div>
+        <button class="btn-addlink" id="btn-new-addlink">+ link toevoegen</button>
+      </div>
+      <div class="field">
+        <label>Toelichting <span style="text-transform:none;font-weight:400">(optioneel)</span></label>
+        <textarea id="new-comment" placeholder="Waarom moeten we dit nummer spelen?"></textarea>
+      </div>
+      <p class="field-error" id="new-err" style="display:none"></p>
+      <div class="form-footer-row">
+        <button class="btn-primary" id="btn-add-song">＋ Voeg nummer toe</button>
+      </div>
+    </div>
+
+    <!-- Nummers lijst -->
+    <div class="section-head">
+      <div class="section-title">Voorgestelde Nummers</div>
+      <div class="controls">
+        <button class="io-btn" id="btn-import"       style="display:none">⬆ Import JSON</button>
+        <button class="io-btn" id="btn-export"       style="display:none">⬇ Export JSON</button>
+        <button class="io-btn" id="btn-manage-users" style="display:none">👥 Gebruikers</button>
+        <button class="io-btn" id="btn-whatsapp">📋 WhatsApp lijst</button>
+        <input type="file" id="file-import" accept=".json" style="display:none"/>
+        <div class="pill-group">
+          <button class="pill on" data-sort="popularity">Populariteit</button>
+          <button class="pill"    data-sort="title">Titel</button>
+        </div>
+        <div class="pill-group">
+          <button class="pill on" data-order="desc">↓</button>
+          <button class="pill"    data-order="asc">↑</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="songs-list"></div>
+  </main>
+
+  <footer>SongVote · Data opgeslagen in GitHub 🐙</footer>
+</div>
+
+<div id="toast"></div>
+
+<!-- config.js moet voor app.js geladen worden -->
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
