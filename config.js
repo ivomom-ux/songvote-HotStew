@@ -11,5 +11,5 @@ const CONFIG = {
   GH_DATA_FILE: 'songvote_data.json',           // bestandsnaam in de repo
 
   // Naam van de beheerder (krijgt import/export/gebruikersbeheer)
-  ADMIN_USER:   'Ivo - trombone',
+  ADMIN_USER:   'Ivo',
 };
