@@ -225,7 +225,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/YPZO4aXO6hA/mqdefault.jpg",
       "upvotes": 4,
-      "downvotes": 3,
+      "downvotes": 2,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "down",
@@ -234,7 +234,7 @@
         "fk5p7q9r1s3t": "down",
         "ml7z9a1b3c5d": "up",
         "is9o8p7q6r5s": "up",
-        "z7jyf054x999": "down"
+        "z7jyf054x999": null
       }
     },
     {
