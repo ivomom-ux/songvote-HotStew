@@ -410,10 +410,11 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
       "upvotes": 1,
-      "downvotes": 0,
+      "downvotes": 1,
       "comments": [],
       "votes": {
-        "fk5p7q9r1s3t": "up"
+        "fk5p7q9r1s3t": "up",
+        "z7jyf054x999": "down"
       }
     },
     {
