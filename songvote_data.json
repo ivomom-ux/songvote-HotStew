@@ -351,7 +351,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/uhzy7JaU2Zc/mqdefault.jpg",
       "upvotes": 3,
-      "downvotes": 3,
+      "downvotes": 4,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "up",
@@ -359,7 +359,8 @@
         "fk5p7q9r1s3t": "down",
         "ml7z9a1b3c5d": "up",
         "is9o8p7q6r5s": "up",
-        "z7jyf054x999": "down"
+        "z7jyf054x999": "down",
+        "djt8okvxuzhe": "down"
       }
     },
     {
@@ -458,9 +459,11 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/CpKcoHrWTF8/mqdefault.jpg",
       "upvotes": 0,
-      "downvotes": 0,
+      "downvotes": 1,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "djt8okvxuzhe": "down"
+      }
     },
     {
       "id": 1000000000019,
