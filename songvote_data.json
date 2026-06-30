@@ -283,7 +283,13 @@
       "thumbnailUrl": "https://img.youtube.com/vi/dIbTpx3qbjQ/mqdefault.jpg",
       "upvotes": 2,
       "downvotes": 5,
-      "comments": [],
+      "comments": [
+        {
+          "id": 1782844256128,
+          "uid": "h8pe07xyc6y2",
+          "text": "Link  werkt niet bij mij"
+        }
+      ],
       "votes": {
         "mk2a4b6c8d0e": "down",
         "db3f5g7h9i1j": "down",
