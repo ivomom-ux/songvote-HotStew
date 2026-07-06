@@ -424,7 +424,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
       "upvotes": 3,
-      "downvotes": 1,
+      "downvotes": 2,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "up",
@@ -432,7 +432,7 @@
         "ml7z9a1b3c5d": "up",
         "is9o8p7q6r5s": "up",
         "z7jyf054x999": null,
-        "djt8okvxuzhe": null
+        "djt8okvxuzhe": "down"
       }
     },
     {
