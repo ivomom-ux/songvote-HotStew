@@ -21,6 +21,22 @@
   },
   "songs": [
     {
+      "id": 1783331379825,
+      "title": "me and mrs jones",
+      "artist": "tower of power",
+      "links": [
+        "https://youtu.be/dirm71xmmbs?list=RDdirm71xmmbs"
+      ],
+      "suggesterComment": "leuk mooi passend rustmoment",
+      "suggesterUid": "djt8okvxuzhe",
+      "suggesterName": "Frankbanjo",
+      "thumbnailUrl": "https://img.youtube.com/vi/dirm71xmmbs/mqdefault.jpg",
+      "upvotes": 0,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {}
+    },
+    {
       "id": 1783330768468,
       "title": "get down on it",
       "artist": "kool and the gang",
@@ -49,12 +65,10 @@
       "suggesterUid": "h8pe07xyc6y2",
       "suggesterName": "Evert",
       "thumbnailUrl": "https://img.youtube.com/vi/g03JgYdf45I/mqdefault.jpg",
-      "upvotes": 1,
+      "upvotes": 0,
       "downvotes": 0,
       "comments": [],
-      "votes": {
-        "djt8okvxuzhe": "up"
-      }
+      "votes": {}
     },
     {
       "id": 1782846247921,
@@ -85,11 +99,9 @@
       "suggesterName": "Evert",
       "thumbnailUrl": "https://img.youtube.com/vi/ySfbEjAUL4o/mqdefault.jpg",
       "upvotes": 0,
-      "downvotes": 1,
+      "downvotes": 0,
       "comments": [],
-      "votes": {
-        "djt8okvxuzhe": "down"
-      }
+      "votes": {}
     },
     {
       "id": 1000000000000,
@@ -260,7 +272,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/Bxxs6k9oCmI/mqdefault.jpg",
       "upvotes": 5,
-      "downvotes": 2,
+      "downvotes": 3,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "up",
@@ -269,7 +281,7 @@
         "ml7z9a1b3c5d": "up",
         "jn9j1k3l5m7n": "down",
         "is9o8p7q6r5s": "up",
-        "djt8okvxuzhe": null,
+        "djt8okvxuzhe": "down",
         "h8pe07xyc6y2": "up"
       }
     },
@@ -412,7 +424,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
       "upvotes": 3,
-      "downvotes": 2,
+      "downvotes": 1,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "up",
@@ -420,7 +432,7 @@
         "ml7z9a1b3c5d": "up",
         "is9o8p7q6r5s": "up",
         "z7jyf054x999": null,
-        "djt8okvxuzhe": "down"
+        "djt8okvxuzhe": null
       }
     },
     {
@@ -504,13 +516,13 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
-      "upvotes": 2,
-      "downvotes": 2,
+      "upvotes": 3,
+      "downvotes": 1,
       "comments": [],
       "votes": {
         "fk5p7q9r1s3t": "up",
         "z7jyf054x999": "down",
-        "djt8okvxuzhe": "down",
+        "djt8okvxuzhe": "up",
         "h8pe07xyc6y2": "up"
       }
     },
@@ -526,12 +538,11 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/oygrmJFKYZY/mqdefault.jpg",
       "upvotes": 2,
-      "downvotes": 1,
+      "downvotes": 0,
       "comments": [],
       "votes": {
         "ev6u8v0w2x4y": "up",
-        "h8pe07xyc6y2": "up",
-        "djt8okvxuzhe": "down"
+        "h8pe07xyc6y2": "up"
       }
     },
     {
@@ -569,8 +580,7 @@
       "comments": [],
       "votes": {
         "is9o8p7q6r5s": "up",
-        "h8pe07xyc6y2": "up",
-        "djt8okvxuzhe": null
+        "h8pe07xyc6y2": "up"
       }
     }
   ]
