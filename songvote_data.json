@@ -31,10 +31,12 @@
       "suggesterUid": "djt8okvxuzhe",
       "suggesterName": "Frankbanjo",
       "thumbnailUrl": "https://img.youtube.com/vi/f0EYpjMkgmU/mqdefault.jpg",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 0,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "djt8okvxuzhe": "up"
+      }
     },
     {
       "id": 1782846611615,
