@@ -408,7 +408,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
       "upvotes": 3,
-      "downvotes": 1,
+      "downvotes": 2,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "up",
@@ -416,7 +416,7 @@
         "ml7z9a1b3c5d": "up",
         "is9o8p7q6r5s": "up",
         "z7jyf054x999": null,
-        "djt8okvxuzhe": null
+        "djt8okvxuzhe": "down"
       }
     },
     {
@@ -500,13 +500,13 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
-      "upvotes": 3,
-      "downvotes": 1,
+      "upvotes": 2,
+      "downvotes": 2,
       "comments": [],
       "votes": {
         "fk5p7q9r1s3t": "up",
         "z7jyf054x999": "down",
-        "djt8okvxuzhe": "up",
+        "djt8okvxuzhe": "down",
         "h8pe07xyc6y2": "up"
       }
     },
@@ -522,11 +522,12 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/oygrmJFKYZY/mqdefault.jpg",
       "upvotes": 2,
-      "downvotes": 0,
+      "downvotes": 1,
       "comments": [],
       "votes": {
         "ev6u8v0w2x4y": "up",
-        "h8pe07xyc6y2": "up"
+        "h8pe07xyc6y2": "up",
+        "djt8okvxuzhe": "down"
       }
     },
     {
