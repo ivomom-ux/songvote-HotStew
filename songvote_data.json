@@ -65,10 +65,12 @@
       "suggesterUid": "h8pe07xyc6y2",
       "suggesterName": "Evert",
       "thumbnailUrl": "https://img.youtube.com/vi/g03JgYdf45I/mqdefault.jpg",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 0,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "djt8okvxuzhe": "up"
+      }
     },
     {
       "id": 1782846247921,
