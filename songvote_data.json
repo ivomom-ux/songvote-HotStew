@@ -104,9 +104,11 @@
       "suggesterName": "Evert",
       "thumbnailUrl": "https://img.youtube.com/vi/ejMXYZSqodM/mqdefault.jpg",
       "upvotes": 0,
-      "downvotes": 0,
+      "downvotes": 1,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "z160a18pwrlg": "down"
+      }
     },
     {
       "id": 1782845141693,
