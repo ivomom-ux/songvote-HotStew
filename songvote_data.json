@@ -597,11 +597,12 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/bC5VhVbDw0o/mqdefault.jpg",
       "upvotes": 2,
-      "downvotes": 0,
+      "downvotes": 1,
       "comments": [],
       "votes": {
         "is9o8p7q6r5s": "up",
-        "h8pe07xyc6y2": "up"
+        "h8pe07xyc6y2": "up",
+        "z160a18pwrlg": "down"
       }
     }
   ]
