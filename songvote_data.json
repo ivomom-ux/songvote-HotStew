@@ -31,10 +31,12 @@
       "suggesterUid": "z160a18pwrlg",
       "suggesterName": "Mar10",
       "thumbnailUrl": "https://img.youtube.com/vi/hqDEn7uUhFc/mqdefault.jpg",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 0,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "z160a18pwrlg": "up"
+      }
     },
     {
       "id": 1783331379825,
