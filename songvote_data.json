@@ -51,10 +51,12 @@
       "suggesterUid": "7o1q1w3ymb2t",
       "suggesterName": "Debs",
       "thumbnailUrl": "placeholder",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 0,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "djt8okvxuzhe": "up"
+      }
     },
     {
       "id": 1783498057279,
