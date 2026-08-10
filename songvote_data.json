@@ -23,6 +23,22 @@
   },
   "songs": [
     {
+      "id": 1786387195539,
+      "title": "la vida loca",
+      "artist": "Ricky Martin",
+      "links": [
+        "https://youtu.be/6_NJtZG5z6s"
+      ],
+      "suggesterComment": "omdat het kan als de meerderheid het passend vindt",
+      "suggesterUid": "djt8okvxuzhe",
+      "suggesterName": "Frankbanjo",
+      "thumbnailUrl": "https://img.youtube.com/vi/6_NJtZG5z6s/mqdefault.jpg",
+      "upvotes": 0,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {}
+    },
+    {
       "id": 1784375235441,
       "title": "the door",
       "artist": "teddy swims",
