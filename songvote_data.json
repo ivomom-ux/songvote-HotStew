@@ -70,13 +70,14 @@
       "suggesterUid": "z160a18pwrlg",
       "suggesterName": "Mar10",
       "thumbnailUrl": "https://img.youtube.com/vi/gpc5c5PMQiw/mqdefault.jpg",
-      "upvotes": 3,
+      "upvotes": 4,
       "downvotes": 0,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "up",
         "z160a18pwrlg": "up",
-        "3yb1bnbxbkdt": "up"
+        "3yb1bnbxbkdt": "up",
+        "07o6uabp08au": "up"
       }
     },
     {
@@ -726,12 +727,13 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/CpKcoHrWTF8/mqdefault.jpg",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 2,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "down",
-        "z160a18pwrlg": "down"
+        "z160a18pwrlg": "down",
+        "07o6uabp08au": "up"
       }
     },
     {
