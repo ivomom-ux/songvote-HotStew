@@ -727,13 +727,13 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/CpKcoHrWTF8/mqdefault.jpg",
-      "upvotes": 1,
-      "downvotes": 2,
+      "upvotes": 0,
+      "downvotes": 3,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "down",
         "z160a18pwrlg": "down",
-        "07o6uabp08au": "up"
+        "07o6uabp08au": "down"
       }
     },
     {
