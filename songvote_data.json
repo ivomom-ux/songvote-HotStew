@@ -26,6 +26,22 @@
   },
   "songs": [
     {
+      "id": 1787426412050,
+      "title": "that,s the way",
+      "artist": "kc and the sunshine band",
+      "links": [
+        "https://youtu.be/O0_H3F84Yjk"
+      ],
+      "suggesterComment": "da moet ja",
+      "suggesterUid": "djt8okvxuzhe",
+      "suggesterName": "Frankbanjo",
+      "thumbnailUrl": "https://img.youtube.com/vi/O0_H3F84Yjk/mqdefault.jpg",
+      "upvotes": 0,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {}
+    },
+    {
       "id": 1787420304410,
       "title": "Medley: That’s the way (I like it) - Shame Shame Shame - evt. Overgang naar lady Marmelade",
       "artist": "KC & the sunshine band & Tina Turner",
