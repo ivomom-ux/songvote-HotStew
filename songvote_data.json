@@ -36,10 +36,12 @@
       "suggesterUid": "wrz5tjgwyqmr",
       "suggesterName": "Deb",
       "thumbnailUrl": "https://img.youtube.com/vi/fN8ks3zNHqE/mqdefault.jpg",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 0,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "djt8okvxuzhe": "up"
+      }
     },
     {
       "id": 1787150287195,
