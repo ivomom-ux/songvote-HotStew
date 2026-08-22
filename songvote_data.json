@@ -744,13 +744,13 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/oygrmJFKYZY/mqdefault.jpg",
-      "upvotes": 4,
-      "downvotes": 1,
+      "upvotes": 3,
+      "downvotes": 2,
       "comments": [],
       "votes": {
         "ev6u8v0w2x4y": "up",
         "h8pe07xyc6y2": "up",
-        "djt8okvxuzhe": "up",
+        "djt8okvxuzhe": "down",
         "07o6uabp08au": "up",
         "e28bf4o0jxzt": "down"
       }
