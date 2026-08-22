@@ -191,10 +191,11 @@
       "suggesterName": "Mar10",
       "thumbnailUrl": "https://img.youtube.com/vi/hqDEn7uUhFc/mqdefault.jpg",
       "upvotes": 1,
-      "downvotes": 0,
+      "downvotes": 1,
       "comments": [],
       "votes": {
-        "z160a18pwrlg": "up"
+        "z160a18pwrlg": "up",
+        "djt8okvxuzhe": "down"
       }
     },
     {
