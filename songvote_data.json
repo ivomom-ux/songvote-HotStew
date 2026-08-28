@@ -158,11 +158,11 @@
       "suggesterName": "Frankbanjo",
       "thumbnailUrl": "https://img.youtube.com/vi/6_NJtZG5z6s/mqdefault.jpg",
       "upvotes": 2,
-      "downvotes": 2,
+      "downvotes": 1,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "up",
-        "3yb1bnbxbkdt": "down",
+        "3yb1bnbxbkdt": null,
         "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "up"
       }
@@ -455,7 +455,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
       "upvotes": 9,
-      "downvotes": 7,
+      "downvotes": 6,
       "comments": [],
       "votes": {
         "mk2a4b6c8d0e": "up",
@@ -474,7 +474,7 @@
         "07o6uabp08au": "up",
         "gkz7x18arhjd": "down",
         "bvtsckt78t7n": "down",
-        "3yb1bnbxbkdt": "down"
+        "3yb1bnbxbkdt": null
       }
     },
     {
