@@ -114,13 +114,13 @@
       "suggesterUid": "z160a18pwrlg",
       "suggesterName": "Mar10",
       "thumbnailUrl": "https://img.youtube.com/vi/gpc5c5PMQiw/mqdefault.jpg",
-      "upvotes": 4,
+      "upvotes": 3,
       "downvotes": 2,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "up",
         "z160a18pwrlg": "up",
-        "3yb1bnbxbkdt": "up",
+        "3yb1bnbxbkdt": null,
         "07o6uabp08au": "up",
         "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "down"
