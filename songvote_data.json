@@ -36,10 +36,12 @@
       "suggesterUid": "07o6uabp08au",
       "suggesterName": "Ivo S.",
       "thumbnailUrl": "https://img.youtube.com/vi/EAys2d29EXo/mqdefault.jpg",
-      "upvotes": 0,
+      "upvotes": 1,
       "downvotes": 0,
       "comments": [],
-      "votes": {}
+      "votes": {
+        "07o6uabp08au": "up"
+      }
     },
     {
       "id": 1788002323067,
