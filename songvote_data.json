@@ -4,17 +4,11 @@
     "07o6uabp08au": "Ivo S.",
     "zc53z3a5dxn2": "Jan",
     "z160a18pwrlg": "Mar10",
-    "hfkvw0u199yv": "Deborah",
-    "z7jyf054x999": "Frank banjo",
-    "4sdk6p8e6rt6": "Evert Van Capelleveen",
     "djt8okvxuzhe": "Frankbanjo",
     "h8pe07xyc6y2": "Evert",
     "3yb1bnbxbkdt": "Jan Broeks",
     "gkz7x18arhjd": "Maaike",
-    "7o1q1w3ymb2t": "Debs",
-    "bvtsckt78t7n": "Hotstew",
-    "e28bf4o0jxzt": "Debs1",
-    "wrz5tjgwyqmr": "Deb"
+    "7o1q1w3ymb2t": "Debs"
   },
   "songs": [
     {
@@ -84,8 +78,8 @@
         "https://youtu.be/fN8ks3zNHqE?is=kNrk7oomHY_r30nG"
       ],
       "suggesterComment": "",
-      "suggesterUid": "wrz5tjgwyqmr",
-      "suggesterName": "Deb",
+      "suggesterUid": "7o1q1w3ymb2t",
+      "suggesterName": "Debs",
       "thumbnailUrl": "https://img.youtube.com/vi/fN8ks3zNHqE/mqdefault.jpg",
       "upvotes": 3,
       "downvotes": 0,
@@ -156,9 +150,9 @@
         "z160a18pwrlg": "up",
         "3yb1bnbxbkdt": "up",
         "07o6uabp08au": "up",
-        "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "down",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "down"
       }
     },
     {
@@ -198,9 +192,9 @@
       "votes": {
         "djt8okvxuzhe": "up",
         "3yb1bnbxbkdt": "down",
-        "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "up",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "down"
       }
     },
     {
@@ -219,12 +213,12 @@
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "up",
-        "bvtsckt78t7n": "up",
         "07o6uabp08au": "up",
-        "e28bf4o0jxzt": "up",
         "gkz7x18arhjd": "down",
         "3yb1bnbxbkdt": "up",
-        "rohexrj01o73": "down"
+        "rohexrj01o73": "down",
+        "7o1q1w3ymb2t": "up",
+        "h8pe07xyc6y2": "up"
       }
     },
     {
@@ -308,9 +302,9 @@
         "z160a18pwrlg": "up",
         "3yb1bnbxbkdt": null,
         "07o6uabp08au": "up",
-        "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "down",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "down"
       }
     },
     {
@@ -352,12 +346,12 @@
       "comments": [],
       "votes": {
         "z160a18pwrlg": "down",
-        "bvtsckt78t7n": "up",
-        "e28bf4o0jxzt": "down",
         "djt8okvxuzhe": "down",
         "gkz7x18arhjd": "down",
         "3yb1bnbxbkdt": "down",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "down",
+        "h8pe07xyc6y2": "up"
       }
     },
     {
@@ -392,18 +386,16 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
-      "upvotes": 2,
-      "downvotes": 5,
+      "upvotes": 1,
+      "downvotes": 4,
       "comments": [],
       "votes": {
-        "z7jyf054x999": "down",
         "djt8okvxuzhe": "down",
-        "h8pe07xyc6y2": "up",
+        "h8pe07xyc6y2": "down",
         "rohexrj01o73": "down",
         "z160a18pwrlg": null,
         "07o6uabp08au": "up",
         "gkz7x18arhjd": "down",
-        "bvtsckt78t7n": "down",
         "3yb1bnbxbkdt": null
       }
     },
@@ -419,15 +411,13 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/LWwhK8AVpqQ/mqdefault.jpg",
       "upvotes": 3,
-      "downvotes": 4,
+      "downvotes": 3,
       "comments": [],
       "votes": {
         "07o6uabp08au": "up",
-        "z7jyf054x999": "down",
         "djt8okvxuzhe": "up",
-        "h8pe07xyc6y2": null,
+        "h8pe07xyc6y2": "down",
         "gkz7x18arhjd": "down",
-        "bvtsckt78t7n": "down",
         "3yb1bnbxbkdt": "down",
         "rohexrj01o73": "up"
       }
@@ -466,11 +456,10 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/Gs069dndIYk/mqdefault.jpg",
-      "upvotes": 3,
+      "upvotes": 2,
       "downvotes": 1,
       "comments": [],
       "votes": {
-        "z7jyf054x999": "up",
         "djt8okvxuzhe": "up",
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "up"
@@ -488,14 +477,13 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/YPZO4aXO6hA/mqdefault.jpg",
       "upvotes": 2,
-      "downvotes": 3,
+      "downvotes": 2,
       "comments": [],
       "votes": {
-        "z7jyf054x999": "down",
         "djt8okvxuzhe": "down",
-        "e28bf4o0jxzt": "up",
         "gkz7x18arhjd": "down",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "up"
       }
     },
     {
@@ -577,7 +565,6 @@
       "downvotes": 2,
       "comments": [],
       "votes": {
-        "z7jyf054x999": null,
         "djt8okvxuzhe": "down",
         "gkz7x18arhjd": "up",
         "rohexrj01o73": "down"
@@ -595,10 +582,9 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/uhzy7JaU2Zc/mqdefault.jpg",
       "upvotes": 1,
-      "downvotes": 6,
+      "downvotes": 5,
       "comments": [],
       "votes": {
-        "z7jyf054x999": "down",
         "djt8okvxuzhe": "down",
         "h8pe07xyc6y2": "down",
         "z160a18pwrlg": "down",
@@ -623,10 +609,10 @@
       "comments": [],
       "votes": {
         "z160a18pwrlg": "down",
-        "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "up",
         "3yb1bnbxbkdt": "down",
-        "rohexrj01o73": "down"
+        "rohexrj01o73": "down",
+        "7o1q1w3ymb2t": "down"
       }
     },
     {
@@ -640,11 +626,10 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/YtTn6ENNGXQ/mqdefault.jpg",
-      "upvotes": 2,
+      "upvotes": 1,
       "downvotes": 2,
       "comments": [],
       "votes": {
-        "z7jyf054x999": "up",
         "djt8okvxuzhe": "up",
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "down"
@@ -662,10 +647,9 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
       "upvotes": 2,
-      "downvotes": 3,
+      "downvotes": 2,
       "comments": [],
       "votes": {
-        "z7jyf054x999": "down",
         "djt8okvxuzhe": "up",
         "h8pe07xyc6y2": "up",
         "z160a18pwrlg": null,
@@ -691,9 +675,9 @@
         "h8pe07xyc6y2": "up",
         "djt8okvxuzhe": "down",
         "07o6uabp08au": "up",
-        "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "down",
-        "rohexrj01o73": "down"
+        "rohexrj01o73": "down",
+        "7o1q1w3ymb2t": "down"
       }
     },
     {
@@ -731,19 +715,18 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/bC5VhVbDw0o/mqdefault.jpg",
-      "upvotes": 5,
+      "upvotes": 4,
       "downvotes": 3,
       "comments": [],
       "votes": {
         "h8pe07xyc6y2": "up",
         "z160a18pwrlg": "down",
         "djt8okvxuzhe": "up",
-        "bvtsckt78t7n": "up",
         "3yb1bnbxbkdt": null,
         "07o6uabp08au": "up",
-        "e28bf4o0jxzt": "down",
         "gkz7x18arhjd": "down",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "down"
       }
     }
   ],
