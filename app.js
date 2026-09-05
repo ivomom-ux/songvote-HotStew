@@ -24,6 +24,7 @@
 // ── STATE ──────────────────────────────────────────
 let songs      = [];
 let users      = {};    // { uid: displayName }
+let settings   = { locked: false };  // locked: geen nieuwe accounts meer
 let sortBy     = 'title';
 let sortOrder  = 'desc';
 let currentUid = null;
@@ -86,11 +87,12 @@ function applyData(data) {
     users = data.users || {};
     songs = data.songs || [];
   }
+  settings = { locked: !!(data && !Array.isArray(data) && data.settings && data.settings.locked) };
   resort();
 }
 
 function buildPayload() {
-  return JSON.stringify({ users, songs }, null, 2);
+  return JSON.stringify({ users, songs, settings }, null, 2);
 }
 
 async function ghSave() {
@@ -167,6 +169,7 @@ function loginWithUid(uid) {
 function registerUser(name) {
   name = name.trim();
   if (!name) return;
+  if (settings.locked) { toast('De ledenlijst is bevroren', 'err'); return; }
   const taken = getUsedNames();
   if (taken.includes(name.toLowerCase())) {
     const errEl = document.getElementById('inp-name-err');
@@ -227,7 +230,37 @@ function updateAdminControls() {
 }
 
 // ── USER MANAGEMENT ────────────────────────────────
-function openManageUsers() { renderUsersList(); document.getElementById('modal-users').style.display = 'flex'; }
+// Bevriezen sluit alleen de deur voor nieuwe namen; wie al een uid heeft komt
+// gewoon binnen via zijn eigen link. Het voorkomt dubbele accounts van
+// dezelfde persoon, het is geen beveiliging.
+function renderLock() {
+  const b = document.getElementById('btn-lock');
+  b.setAttribute('aria-checked', settings.locked ? 'true' : 'false');
+}
+
+function renderLoginModal() {
+  const open   = document.getElementById('login-open');
+  const locked = document.getElementById('login-locked');
+  const sub    = document.getElementById('login-sub');
+  if (settings.locked) {
+    open.style.display = 'none';
+    locked.style.display = '';
+    locked.textContent = `Er kunnen momenteel geen nieuwe leden bij. Vraag ${CONFIG.ADMIN_USER} om je toe te voegen, of om je persoonlijke inloglink als je er al in staat.`;
+    sub.textContent = 'De ledenlijst is bevroren.';
+  } else {
+    open.style.display = '';
+    locked.style.display = 'none';
+    sub.textContent = 'Voer je naam in zodat de band weet wie wat voorstelt en stemt.';
+  }
+}
+
+document.getElementById('btn-lock').onclick = () => {
+  settings.locked = !settings.locked;
+  renderLock(); renderLoginModal(); scheduleSave();
+  toast(settings.locked ? 'Ledenlijst bevroren' : 'Ledenlijst weer open');
+};
+
+function openManageUsers() { renderLock(); renderUsersList(); document.getElementById('modal-users').style.display = 'flex'; }
 
 function renderUsersList() {
   const el = document.getElementById('users-list');
@@ -602,6 +635,7 @@ async function init() {
     document.getElementById('modal-user').style.display = 'none';
   }
 
+  renderLoginModal();
   renderHeader();
   updateAdminControls();
   renderSongs();

@@ -15,15 +15,18 @@
   <div class="overlay" id="modal-user">
     <div class="modal">
       <div class="modal-title">Welkom bij SongVote 🎸</div>
-      <div class="modal-sub">Voer je naam in zodat de band weet wie wat voorstelt en stemt.</div>
-      <div class="field">
-        <label for="inp-name">Jouw naam</label>
-        <input type="text" id="inp-name" placeholder="bv. Jan" autocomplete="off"/>
-        <p class="field-error" id="inp-name-err" style="display:none"></p>
+      <div class="modal-sub" id="login-sub">Voer je naam in zodat de band weet wie wat voorstelt en stemt.</div>
+      <div id="login-open">
+        <div class="field">
+          <label for="inp-name">Jouw naam</label>
+          <input type="text" id="inp-name" placeholder="bv. Jan" autocomplete="off"/>
+          <p class="field-error" id="inp-name-err" style="display:none"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-primary" id="btn-set-user">Opslaan en doorgaan →</button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-primary" id="btn-set-user">Opslaan en doorgaan →</button>
-      </div>
+      <p class="locked-note" id="login-locked" style="display:none"></p>
     </div>
   </div>
 
@@ -54,6 +57,13 @@
     <div class="modal wide">
       <div class="modal-title">👥 Gebruikers beheren</div>
       <div class="modal-sub">Verwijder een gebruiker inclusief al zijn stemmen, reacties en voorgestelde nummers.</div>
+      <div class="lock-row">
+        <div class="lock-text">
+          <div class="lock-title">Bevriezen</div>
+          <div class="lock-sub">Niemand kan een nieuw account aanmaken. Bestaande leden loggen gewoon in.</div>
+        </div>
+        <button class="switch" id="btn-lock" role="switch" aria-checked="false" aria-label="Ledenlijst bevriezen"><span class="knob"></span></button>
+      </div>
       <div id="users-list"></div>
       <div class="modal-footer">
         <button class="btn-secondary" id="btn-users-close">Sluiten</button>
