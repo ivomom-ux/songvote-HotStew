@@ -731,6 +731,6 @@
     }
   ],
   "settings": {
-    "locked": false
+    "locked": true
   }
 }
