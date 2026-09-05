@@ -24,9 +24,11 @@
 // ── STATE ──────────────────────────────────────────
 let songs      = [];
 let users      = {};    // { uid: displayName }
-let sortBy     = 'popularity';
+let sortBy     = 'title';
 let sortOrder  = 'desc';
 let currentUid = null;
+let orderIds   = null;  // vastgezette weergavevolgorde; null = opnieuw sorteren
+let resortHinted = false;
 let editingId  = null;
 let saveTimer  = null;
 let isSaving   = false;
@@ -81,6 +83,7 @@ function applyData(data) {
     users = data.users || {};
     songs = data.songs || [];
   }
+  resort();
 }
 
 function buildPayload() {
@@ -254,7 +257,7 @@ function deleteUser(uid) {
   });
   songs = songs.filter(s => s.suggesterUid !== uid);
   delete users[uid];
-  renderUsersList(); renderSongs(); scheduleSave();
+  resort(); renderUsersList(); renderSongs(); scheduleSave();
   toast(`${name} verwijderd`);
 }
 
@@ -296,7 +299,7 @@ function addSong() {
   document.getElementById('new-artist').value = '';
   document.getElementById('new-links-wrap').innerHTML = '<div class="link-row"><input type="url" placeholder="https://…"/></div>';
   document.getElementById('new-comment').value = '';
-  renderSongs(); scheduleSave(); toast('Nummer toegevoegd!');
+  resort(); renderSongs(); scheduleSave(); toast('Nummer toegevoegd!');
 }
 
 // ── EDIT SONG ──────────────────────────────────────
@@ -328,7 +331,7 @@ document.getElementById('btn-edit-save').onclick = () => {
   const s = songs.find(s => s.id === editingId);
   if (s) Object.assign(s, { title, artist, links, suggesterComment: comment, thumbnailUrl: thumb(links) || 'placeholder' });
   document.getElementById('modal-edit').style.display = 'none'; editingId = null;
-  renderSongs(); scheduleSave(); toast('Nummer bijgewerkt');
+  resort(); renderSongs(); scheduleSave(); toast('Nummer bijgewerkt');
 };
 
 // ── DELETE SONG ────────────────────────────────────
@@ -336,13 +339,19 @@ function deleteSong(id) {
   const s = songs.find(s => s.id === id); if (!s) return;
   if (!confirm(`"${s.title}" verwijderen?`)) return;
   songs = songs.filter(s => s.id !== id);
-  renderSongs(); scheduleSave(); toast('Verwijderd');
+  resort(); renderSongs(); scheduleSave(); toast('Verwijderd');
 }
 
 // ── VOTE ───────────────────────────────────────────
 function vote(id, type) {
   if (!currentUid) { toast('Voer eerst je naam in', 'err'); return; }
   const s = songs.find(s => s.id === id); if (!s) return;
+  // De volgorde blijft staan (zie orderedSongs). Op populariteit verandert de
+  // score dus wel, maar de positie pas na een klik op de sorteerknop.
+  if (sortBy === 'popularity' && !resortHinted) {
+    resortHinted = true;
+    toast('Klik op Populariteit om de lijst opnieuw te sorteren');
+  }
   if (!s.votes) s.votes = {};
   const prev = s.votes[currentUid];
   if (prev === type) { s.votes[currentUid] = null; type === 'up' ? s.upvotes-- : s.downvotes--; }
@@ -369,15 +378,42 @@ function addComment(id) {
 }
 
 // ── SORT ───────────────────────────────────────────
+// De weergavevolgorde ligt vast zolang orderIds gevuld is. Stemmen laat de
+// lijst dus met rust: een nummer schuift niet onder de muis vandaan en wie
+// zich bedenkt, vindt het terug op dezelfde plek. resort() geeft de volgorde
+// weer vrij; dat gebeurt alleen bij een expliciete aanleiding.
+function resort() { orderIds = null; }
+
+// Sorteert alleen als de volgorde is vrijgegeven. Nieuwe nummers komen
+// achteraan, verwijderde vallen weg.
+function orderedSongs() {
+  if (!orderIds) {
+    orderIds = [...songs].sort((a, b) => {
+      const c = sortBy === 'popularity'
+        ? (a.upvotes - a.downvotes) - (b.upvotes - b.downvotes)
+        : a.title.localeCompare(b.title, 'nl');
+      return sortBy === 'popularity'
+        ? (sortOrder === 'asc' ? c : -c)
+        : (sortOrder === 'desc' ? c : -c);
+    }).map(s => s.id);
+  }
+  const left = new Map(songs.map(s => [s.id, s]));
+  const out  = [];
+  orderIds.forEach(id => { const s = left.get(id); if (s) { out.push(s); left.delete(id); } });
+  left.forEach(s => out.push(s));
+  orderIds = out.map(s => s.id);
+  return out;
+}
+
 document.querySelectorAll('[data-sort]').forEach(b => b.onclick = () => {
   sortBy = b.dataset.sort;
   document.querySelectorAll('[data-sort]').forEach(x => x.classList.toggle('on', x === b));
-  renderSongs();
+  resort(); renderSongs();
 });
 document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => {
   sortOrder = b.dataset.order;
   document.querySelectorAll('[data-order]').forEach(x => x.classList.toggle('on', x === b));
-  renderSongs();
+  resort(); renderSongs();
 });
 
 // ── IMPORT / EXPORT ────────────────────────────────
@@ -426,14 +462,7 @@ document.getElementById('btn-whatsapp-copy').onclick = () => {
 
 // ── RENDER SONGS ───────────────────────────────────
 function renderSongs() {
-  const sorted = [...songs].sort((a, b) => {
-    const c = sortBy === 'popularity'
-      ? (a.upvotes - a.downvotes) - (b.upvotes - b.downvotes)
-      : a.title.localeCompare(b.title, 'nl');
-    return sortBy === 'popularity'
-      ? (sortOrder === 'asc' ? c : -c)
-      : (sortOrder === 'desc' ? c : -c);
-  });
+  const sorted = orderedSongs();
 
   const el = document.getElementById('songs-list');
   if (!sorted.length) {
