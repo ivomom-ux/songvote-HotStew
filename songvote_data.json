@@ -135,14 +135,14 @@
       "suggesterName": "Frankbanjo",
       "thumbnailUrl": "https://img.youtube.com/vi/JxohJX9ElpE/mqdefault.jpg",
       "upvotes": 3,
-      "downvotes": 2,
+      "downvotes": 1,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "up",
         "z160a18pwrlg": "up",
         "3yb1bnbxbkdt": "up",
         "gkz7x18arhjd": "down",
-        "rohexrj01o73": "down"
+        "rohexrj01o73": null
       }
     },
     {
