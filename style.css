@@ -166,6 +166,11 @@ body::after {
   gap: 12px; padding: 28px 0 18px; border-top: 1px solid var(--border);
 }
 .section-title { font-family: var(--font-d); font-size: 22px; color: #fff; }
+.progress {
+  font-family: var(--font-b); font-size: 13px; font-weight: 500;
+  color: var(--muted2); margin-left: 10px; white-space: nowrap;
+}
+.progress.done { color: var(--green); }
 .controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .pill-group {
   display: flex; background: var(--s2); border: 1px solid var(--border);
@@ -187,6 +192,13 @@ body::after {
   border-radius: 14px; overflow: hidden; transition: border-color .2s, transform .15s;
 }
 .song-card:hover { border-color: rgba(255,60,95,.2); transform: translateY(-1px); }
+/* Nog niet door jou beoordeeld: goud, want rood is hier al 👎 en verwijderen. */
+.song-card.todo { border-left: 3px solid var(--gold); }
+.todo-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: .03em;
+  color: var(--gold); background: rgba(245,166,35,.12);
+  border-radius: 5px; padding: 3px 8px; white-space: nowrap;
+}
 .song-main { display: flex; }
 .song-thumb {
   width: 96px; min-height: 84px; flex-shrink: 0;

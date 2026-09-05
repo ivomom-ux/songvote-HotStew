@@ -29,6 +29,7 @@ let sortOrder  = 'desc';
 let currentUid = null;
 let orderIds   = null;  // vastgezette weergavevolgorde; null = opnieuw sorteren
 let resortHinted = false;
+let todoOnly   = false;  // ToDo-filter: alleen nummers waarop ik nog niet stemde
 let editingId  = null;
 let saveTimer  = null;
 let isSaving   = false;
@@ -46,6 +47,8 @@ function myName()     { return users[currentUid] || '?'; }
 function nameOf(uid)  { return users[uid] || uid || '?'; }
 function isAdmin()    { return myName().trim().toLowerCase() === CONFIG.ADMIN_USER.trim().toLowerCase(); }
 function isOwner(s)   { return s.suggesterUid === currentUid; }
+// Heb ik op dit nummer gestemd? Een teruggenomen stem staat op null en telt niet.
+function hasVoted(s) { return !!(currentUid && s.votes && s.votes[currentUid]); }
 
 // ── GITHUB API ─────────────────────────────────────
 const GH_API = `https://api.github.com/repos/${CONFIG.GH_OWNER}/${CONFIG.GH_REPO}/contents/${CONFIG.GH_DATA_FILE}`;
@@ -416,6 +419,14 @@ document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => {
   resort(); renderSongs();
 });
 
+// ── TODO-FILTER ────────────────────────────────────
+// Filtert alleen, sorteert niet: de vastgezette volgorde blijft intact.
+document.getElementById('pill-todo').onclick = e => {
+  todoOnly = !todoOnly;
+  e.currentTarget.classList.toggle('on', todoOnly);
+  renderSongs();
+};
+
 // ── IMPORT / EXPORT ────────────────────────────────
 document.getElementById('btn-export').onclick = () => {
   const blob = new Blob([buildPayload()], { type: 'application/json' });
@@ -462,11 +473,15 @@ document.getElementById('btn-whatsapp-copy').onclick = () => {
 
 // ── RENDER SONGS ───────────────────────────────────
 function renderSongs() {
-  const sorted = orderedSongs();
+  const all    = orderedSongs();
+  const sorted = todoOnly && currentUid ? all.filter(s => !hasVoted(s)) : all;
+  renderProgress(all);
 
   const el = document.getElementById('songs-list');
   if (!sorted.length) {
-    el.innerHTML = `<div class="empty"><div class="e-icon">🎵</div><h3>Nog geen nummers voorgesteld</h3><p>Wees de eerste en gebruik het formulier hierboven!</p></div>`;
+    el.innerHTML = all.length
+      ? `<div class="empty"><div class="e-icon">✅</div><h3>Je hebt op alles gestemd</h3><p>Zet ToDo uit om de hele lijst weer te zien.</p></div>`
+      : `<div class="empty"><div class="e-icon">🎵</div><h3>Nog geen nummers voorgesteld</h3><p>Wees de eerste en gebruik het formulier hierboven!</p></div>`;
     return;
   }
 
@@ -475,6 +490,7 @@ function renderSongs() {
     const scClass = sc > 0 ? 'pos' : sc < 0 ? 'neg' : 'neu';
     const scStr   = sc > 0 ? `+${sc}` : String(sc);
     const myVote  = (s.votes && currentUid) ? s.votes[currentUid] : null;
+    const todo    = currentUid && !myVote;
 
     const th = s.thumbnailUrl && s.thumbnailUrl !== 'placeholder'
       ? `<img src="${esc(s.thumbnailUrl)}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><span class="no-art" style="display:none">♪</span>`
@@ -524,7 +540,7 @@ function renderSongs() {
 
     const suggesterName = nameOf(s.suggesterUid) || s.suggesterName || '?';
 
-    return `<div class="song-card">
+    return `<div class="song-card${todo ? ' todo' : ''}">
       <div class="song-main">
         <a class="song-thumb" href="${esc(s.links[0] || '#')}" target="_blank" rel="noopener">${th}</a>
         <div class="song-body">
@@ -542,12 +558,27 @@ function renderSongs() {
         <div class="votes">
           <button class="vote-btn up${myVote === 'up' ? ' voted-up' : ''}" onclick="vote(${s.id},'up')">👍 ${s.upvotes}</button>
           <button class="vote-btn down${myVote === 'down' ? ' voted-down' : ''}" onclick="vote(${s.id},'down')">👎 ${s.downvotes}</button>
+          ${todo ? '<span class="todo-tag">ToDo</span>' : ''}
         </div>
         <span class="score ${scClass}" style="cursor:pointer" onclick="toggleVotes(${s.id})" title="Wie heeft gestemd?">${scStr}</span>
         <button class="cmnt-toggle" onclick="toggleCmnt(${s.id})">💬 ${s.comments.length}</button>
       </div>${voteDetailsHtml}${cmntHtml}
     </div>`;
   }).join('');
+}
+
+// Teller en ToDo-filter horen bij "jij" en verschijnen dus alleen na inloggen.
+function renderProgress(all) {
+  const elP = document.getElementById('vote-progress');
+  const elG = document.getElementById('todo-group');
+  if (!currentUid || !all.length) {
+    elP.textContent = ''; elG.style.display = 'none';
+    return;
+  }
+  const done = all.filter(hasVoted).length;
+  elP.textContent = `${done} van ${all.length} beoordeeld`;
+  elP.classList.toggle('done', done === all.length);
+  elG.style.display = '';
 }
 
 // ── BOOTSTRAP ──────────────────────────────────────

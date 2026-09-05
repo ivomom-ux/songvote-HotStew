@@ -118,7 +118,7 @@
 
     <!-- Nummers lijst -->
     <div class="section-head">
-      <div class="section-title">Voorgestelde Nummers</div>
+      <div class="section-title">Voorgestelde Nummers<span class="progress" id="vote-progress"></span></div>
       <div class="controls">
         <button class="io-btn" id="btn-import"       style="display:none">⬆ Import JSON</button>
         <button class="io-btn" id="btn-export"       style="display:none">⬇ Export JSON</button>
@@ -132,6 +132,9 @@
         <div class="pill-group">
           <button class="pill on" data-order="desc">↓</button>
           <button class="pill"    data-order="asc">↑</button>
+        </div>
+        <div class="pill-group" id="todo-group" style="display:none">
+          <button class="pill" id="pill-todo" title="Toon alleen nummers waarop jij nog niet gestemd hebt">ToDo</button>
         </div>
       </div>
     </div>
