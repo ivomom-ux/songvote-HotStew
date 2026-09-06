@@ -167,8 +167,9 @@ body::after {
 }
 .section-title { font-family: var(--font-d); font-size: 22px; color: #fff; }
 .progress {
+  display: block; margin-top: 3px;
   font-family: var(--font-b); font-size: 13px; font-weight: 500;
-  color: var(--muted2); margin-left: 10px; white-space: nowrap;
+  color: var(--muted2); white-space: nowrap;
 }
 .progress.done { color: var(--green); }
 .controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
