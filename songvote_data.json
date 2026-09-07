@@ -235,7 +235,7 @@
       "suggesterUid": "7o1q1w3ymb2t",
       "suggesterName": "Debs",
       "thumbnailUrl": "placeholder",
-      "upvotes": 6,
+      "upvotes": 5,
       "downvotes": 0,
       "comments": [],
       "votes": {
@@ -243,8 +243,7 @@
         "gkz7x18arhjd": "up",
         "07o6uabp08au": "up",
         "3yb1bnbxbkdt": "up",
-        "rohexrj01o73": "up",
-        "7o1q1w3ymb2t": "up"
+        "rohexrj01o73": "up"
       }
     },
     {
@@ -391,7 +390,7 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
-      "upvotes": 2,
+      "upvotes": 1,
       "downvotes": 4,
       "comments": [],
       "votes": {
@@ -401,8 +400,7 @@
         "z160a18pwrlg": null,
         "07o6uabp08au": "up",
         "gkz7x18arhjd": "down",
-        "3yb1bnbxbkdt": null,
-        "7o1q1w3ymb2t": "up"
+        "3yb1bnbxbkdt": null
       }
     },
     {
@@ -523,7 +521,7 @@
       "suggesterName": "Ivo",
       "thumbnailUrl": "https://img.youtube.com/vi/dIbTpx3qbjQ/mqdefault.jpg",
       "upvotes": 1,
-      "downvotes": 2,
+      "downvotes": 3,
       "comments": [
         {
           "id": 1782844256128,
@@ -534,7 +532,8 @@
       "votes": {
         "gkz7x18arhjd": "down",
         "3yb1bnbxbkdt": "down",
-        "rohexrj01o73": "up"
+        "rohexrj01o73": "up",
+        "7o1q1w3ymb2t": "down"
       }
     },
     {
@@ -567,14 +566,13 @@
       "suggesterUid": "rohexrj01o73",
       "suggesterName": "Ivo",
       "thumbnailUrl": "placeholder",
-      "upvotes": 2,
+      "upvotes": 1,
       "downvotes": 2,
       "comments": [],
       "votes": {
         "djt8okvxuzhe": "down",
         "gkz7x18arhjd": "up",
-        "rohexrj01o73": "down",
-        "7o1q1w3ymb2t": "up"
+        "rohexrj01o73": "down"
       }
     },
     {
