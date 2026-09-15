@@ -36,6 +36,7 @@ let saveTimer  = null;
 let isSaving   = false;
 const cmntOpen = {};
 const voteOpen = {};
+const revwOpen = {};
 
 // ── HELPERS ────────────────────────────────────────
 function genUid() {
@@ -50,6 +51,30 @@ function isAdmin()    { return myName().trim().toLowerCase() === CONFIG.ADMIN_US
 function isOwner(s)   { return s.suggesterUid === currentUid; }
 // Heb ik op dit nummer gestemd? Een teruggenomen stem staat op null en telt niet.
 function hasVoted(s) { return !!(currentUid && s.votes && s.votes[currentUid]); }
+function popularity(s) { return s.upvotes - s.downvotes; }
+
+// ── BEOORDELING ────────────────────────────────────
+// Handmatige scores per nummer, ingevuld via de Excel-lijst (zie excel.js).
+// Let op: de totaalberekening hieronder is dezelfde als de Excel-formule die
+// exportExcel() wegschrijft. Pas ze samen aan, anders lopen ze uit elkaar.
+const REVIEW_LABELS = {
+  matchZang:    'Match met zang',
+  hotstew:      'HotStew factor',
+  blazers:      'Blazersfactor',
+  bekendheid:   'Bekendheid',
+  dansbaarheid: 'Dansbaarheid',
+};
+const REVIEW_KEYS = Object.keys(REVIEW_LABELS);
+
+function reviewNum(s, k) { const v = (s.review || {})[k]; return typeof v === 'number' ? v : 0; }
+function isScored(s)     { return REVIEW_KEYS.some(k => typeof (s.review || {})[k] === 'number'); }
+// Onder de 3 op "Match met zang" valt een nummer af: dan telt de rest niet mee.
+function isRejected(s)   { return reviewNum(s, 'matchZang') < 3; }
+function reviewTotal(s) {
+  if (isRejected(s)) return 0;
+  return (REVIEW_KEYS.reduce((t, k) => t + reviewNum(s, k), 0) + popularity(s)) * 4;
+}
+function fmtNum(n) { return String(n).replace('.', ','); }
 
 // ── GITHUB API ─────────────────────────────────────
 const GH_API = `https://api.github.com/repos/${CONFIG.GH_OWNER}/${CONFIG.GH_REPO}/contents/${CONFIG.GH_DATA_FILE}`;
@@ -405,6 +430,7 @@ function vote(id, type) {
 // ── COMMENTS ───────────────────────────────────────
 function toggleCmnt(id)  { cmntOpen[id] = !cmntOpen[id]; renderSongs(); }
 function toggleVotes(id) { voteOpen[id] = !voteOpen[id]; renderSongs(); }
+function toggleReview(id) { revwOpen[id] = !revwOpen[id]; renderSongs(); }
 
 function addComment(id) {
   if (!currentUid) { toast('Voer eerst je naam in', 'err'); return; }
@@ -521,7 +547,7 @@ function renderSongs() {
   }
 
   el.innerHTML = sorted.map(s => {
-    const sc      = s.upvotes - s.downvotes;
+    const sc      = popularity(s);
     const scClass = sc > 0 ? 'pos' : sc < 0 ? 'neg' : 'neu';
     const scStr   = sc > 0 ? `+${sc}` : String(sc);
     const myVote  = (s.votes && currentUid) ? s.votes[currentUid] : null;
@@ -560,6 +586,28 @@ function renderSongs() {
       </div>
     </div>` : '';
 
+    // Beoordeling (via de Excel-lijst ingevuld)
+    const scored  = isScored(s);
+    const total   = reviewTotal(s);
+    const rBadge  = scored
+      ? `<button class="review-badge${total ? '' : ' zero'}" onclick="toggleReview(${s.id})"
+                 title="Beoordeling van de selectiegroep">🎯 ${total}</button>`
+      : '';
+    const rOpen   = scored && revwOpen[s.id];
+    const rv      = s.review || {};
+    const rRow    = (k, v) => `<div class="rv-row"><span class="rv-k">${esc(k)}</span><span class="rv-v">${esc(v)}</span></div>`;
+    const reviewHtml = rOpen ? `<div class="review-details">
+      ${rv.genre     ? rRow('Genre', rv.genre)         : ''}
+      ${rv.categorie ? rRow('Categorie', rv.categorie) : ''}
+      ${REVIEW_KEYS.map(k => rRow(REVIEW_LABELS[k],
+          typeof rv[k] === 'number' ? fmtNum(rv[k]) : '—')).join('')}
+      ${rRow('Populariteit', scStr)}
+      <div class="rv-row rv-total"><span class="rv-k">Totaal</span><span class="rv-v">${total}</span></div>
+      ${isRejected(s)
+        ? `<div class="rv-note">Valt af: onder een 3 voor match met zang telt de rest niet mee.</div>`
+        : ''}
+    </div>` : '';
+
     // Comments
     const open = cmntOpen[s.id];
     const cmntHtml = open ? `<div class="cmnt-section">
@@ -595,9 +643,12 @@ function renderSongs() {
           <button class="vote-btn down${myVote === 'down' ? ' voted-down' : ''}" onclick="vote(${s.id},'down')">👎 ${s.downvotes}</button>
           ${todo ? '<span class="todo-tag">ToDo</span>' : ''}
         </div>
-        <span class="score ${scClass}" style="cursor:pointer" onclick="toggleVotes(${s.id})" title="Wie heeft gestemd?">${scStr}</span>
+        <div class="foot-scores">
+          <span class="score ${scClass}" style="cursor:pointer" onclick="toggleVotes(${s.id})" title="Wie heeft gestemd?">${scStr}</span>
+          ${rBadge}
+        </div>
         <button class="cmnt-toggle" onclick="toggleCmnt(${s.id})">💬 ${s.comments.length}</button>
-      </div>${voteDetailsHtml}${cmntHtml}
+      </div>${voteDetailsHtml}${reviewHtml}${cmntHtml}
     </div>`;
   }).join('');
 }

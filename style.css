@@ -257,6 +257,30 @@ body::after {
 }
 .cmnt-toggle:hover { background: var(--s3); color: var(--text); }
 
+/* ── BEOORDELING ── */
+/* Score uit de Excel-lijst van de selectiegroep. 0 = afgevallen, dus gedempt. */
+.foot-scores { display: flex; align-items: center; gap: 9px; }
+.review-badge {
+  background: var(--s3); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 3px 9px;
+  font-size: 12px; font-weight: 600; color: var(--gold);
+  white-space: nowrap; transition: .15s;
+}
+.review-badge:hover { border-color: var(--gold); }
+.review-badge.zero { color: var(--muted); }
+.review-badge.zero:hover { border-color: var(--muted2); }
+.review-details {
+  padding: 10px 14px 11px; border-top: 1px solid var(--border);
+  background: rgba(0,0,0,.1);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3px 16px;
+}
+.rv-row { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; }
+.rv-k { color: var(--muted); }
+.rv-v { color: var(--text); font-weight: 600; }
+.rv-total { grid-column: 1 / -1; border-top: 1px solid var(--border); margin-top: 5px; padding-top: 5px; }
+.rv-total .rv-k, .rv-total .rv-v { color: var(--gold); }
+.rv-note { grid-column: 1 / -1; font-size: 11px; color: var(--muted); font-style: italic; margin-top: 5px; }
+
 /* ── VOTE DETAILS ── */
 .vote-details {
   padding: 8px 14px 10px; border-top: 1px solid var(--border);

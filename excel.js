@@ -144,6 +144,8 @@ async function exportExcel() {
 
   // Totaal als echte Excel-formule, zodat hij meerekent zodra iemand scoort.
   // Onder de 3 op "Match met zang" valt het nummer af: dan telt de rest niet.
+  // Dezelfde berekening staat in reviewTotal() in app.js, voor de badge op de
+  // kaart. Pas ze samen aan, anders lopen sheet en app uit elkaar.
   for (let r = HEADER_ROW; r < aoa.length; r++) {
     const excelRow = r + 1;                 // 1-based rijnummer voor de formule
     const from = XLSX.utils.encode_col(COL_MATCH) + excelRow;

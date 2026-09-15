@@ -141,6 +141,8 @@ Werkwijze:
 
 Zo kan een export nooit meer werk overschrijven: de app houdt beide helften vast.
 
+Zodra een nummer scores heeft, verschijnt op de kaart een badge met het totaal (bv. 🎯 106). Klik erop voor de losse scores. Een nummer met minder dan een 3 voor match met zang valt af en toont een gedempte 🎯 0.
+
 Details:
 
 - Import raakt **alleen** de beoordelingskolommen aan. Stemmen, titels, artiesten en reacties blijven ongemoeid.
