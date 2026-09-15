@@ -227,6 +227,8 @@ function updateAdminControls() {
   document.getElementById('btn-import').style.display       = a ? 'inline-flex' : 'none';
   document.getElementById('btn-export').style.display       = a ? 'inline-flex' : 'none';
   document.getElementById('btn-manage-users').style.display = a ? 'inline-flex' : 'none';
+  document.getElementById('btn-xls-import').style.display   = a ? 'inline-flex' : 'none';
+  document.getElementById('btn-xls-export').style.display   = a ? 'inline-flex' : 'none';
 }
 
 // ── USER MANAGEMENT ────────────────────────────────

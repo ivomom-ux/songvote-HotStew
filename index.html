@@ -132,9 +132,12 @@
       <div class="controls">
         <button class="io-btn" id="btn-import"       style="display:none">⬆ Import JSON</button>
         <button class="io-btn" id="btn-export"       style="display:none">⬇ Export JSON</button>
+        <button class="io-btn" id="btn-xls-import"   style="display:none">⬆ Import Excel</button>
+        <button class="io-btn" id="btn-xls-export"   style="display:none">⬇ Export Excel</button>
         <button class="io-btn" id="btn-manage-users" style="display:none">👥 Gebruikers</button>
         <button class="io-btn" id="btn-whatsapp">📋 WhatsApp lijst</button>
-        <input type="file" id="file-import" accept=".json" style="display:none"/>
+        <input type="file" id="file-import"     accept=".json" style="display:none"/>
+        <input type="file" id="file-xls-import" accept=".xlsx,.xlsm,.xls" style="display:none"/>
         <div class="pill-group">
           <button class="pill"    data-sort="popularity">Populariteit</button>
           <button class="pill on" data-sort="title">Titel</button>
@@ -160,6 +163,7 @@
 <!-- config.js moet voor app.js geladen worden -->
 <script src="config.js"></script>
 <script src="app.js"></script>
+<script src="excel.js"></script>
 
 </body>
 </html>

@@ -123,6 +123,34 @@ Per band herhaal je stap 1 t/m 5 met een andere repository naam. De token kun je
 
 ---
 
+## Beoordelingslijst in Excel (alleen beheerder)
+
+Naast stemmen houdt een kleine groep een beoordeling per nummer bij: genre, categorie en de scores voor zang, HotStew-factor, blazers, bekendheid en dansbaarheid. Die beoordeling staat **in de app**, in `songvote_data.json` onder `review`. Excel is alleen een werkvorm, geen opslag.
+
+| Knop | Wat het doet |
+|---|---|
+| **⬇ Export Excel** | Bouwt op dat moment een verse `.xlsx` uit de live stemmen plus de opgeslagen beoordeling. Altijd actueel. |
+| **⬆ Import Excel** | Leest een ingevulde `.xlsx` en zet alleen de beoordelingskolommen terug in de app. |
+
+Werkwijze:
+
+1. Exporteer de lijst en deel hem met de beoordelingsgroep
+2. Zij vullen **Genre t/m Dansbaarheid** in (de kolom `Totaal` rekent zichzelf uit)
+3. Importeer het ingevulde bestand terug; je krijgt eerst een overzicht van wat er verandert en kunt annuleren
+4. Vanaf dat moment bevat elke export de beoordeling én de nieuwste stemmen
+
+Zo kan een export nooit meer werk overschrijven: de app houdt beide helften vast.
+
+Details:
+
+- Import raakt **alleen** de beoordelingskolommen aan. Stemmen, titels, artiesten en reacties blijven ongemoeid.
+- Een leeg gelaten beoordelingscel wist die waarde in de app. Zo kun je een verkeerde score ook weer weghalen.
+- Koppelen gaat op de kolom `ID`. Laat die kolom staan. Een lijst zonder ID-kolom (zoals de eerste handgemaakte versie) wordt gekoppeld op titel plus artiest; twee nummers met dezelfde titel worden dan overgeslagen en gemeld.
+- `Populariteit`, `Totaal`, `Opmerking`, `Voorgesteld door` en `Aantal stemmers` komen uit de app en worden bij elke export ververst. Aanpassen in Excel heeft geen zin.
+- De Excel-bibliotheek wordt pas bij de eerste klik van een CDN geladen, dus normale gebruikers merken er niets van.
+
+---
+
 ## Data inzien of aanpassen
 
 Het bestand `songvote_data.json` staat gewoon zichtbaar in je repository. Je kunt het daar altijd openen, bekijken en handmatig aanpassen. Elke opslag vanuit de app verschijnt als een commit in de geschiedenis — zo kun je altijd terugkijken of terugdraaien.
