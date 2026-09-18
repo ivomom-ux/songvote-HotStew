@@ -48,6 +48,9 @@
         "djt8okvxuzhe": "up",
         "rohexrj01o73": "down",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "genre": "Dance"
       }
     },
     {
@@ -70,6 +73,13 @@
         "3yb1bnbxbkdt": "up",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "up"
+      },
+      "review": {
+        "genre": "Disco",
+        "matchZang": 5,
+        "hotstew": 5,
+        "bekendheid": 5,
+        "dansbaarheid": 5
       }
     },
     {
@@ -92,6 +102,9 @@
         "3yb1bnbxbkdt": "up",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "up"
+      },
+      "review": {
+        "genre": "Disco"
       }
     },
     {
@@ -161,6 +174,13 @@
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "genre": "Pop",
+        "matchZang": 2,
+        "hotstew": 5,
+        "bekendheid": 5,
+        "dansbaarheid": 5
       }
     },
     {
@@ -251,6 +271,9 @@
         "07o6uabp08au": "up",
         "3yb1bnbxbkdt": "up",
         "rohexrj01o73": "up"
+      },
+      "review": {
+        "genre": "Pop"
       }
     },
     {
@@ -387,6 +410,9 @@
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "genre": "Jazz"
       }
     },
     {
@@ -751,6 +777,9 @@
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "genre": "Funk"
       }
     }
   ],
