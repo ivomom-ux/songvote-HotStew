@@ -79,6 +79,9 @@
         "07o6uabp08au": "up",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "matchZang": 2
       }
     },
     {
@@ -129,8 +132,9 @@
       },
       "review": {
         "genre": "Disco",
-        "matchZang": 5,
-        "hotstew": 5,
+        "matchZang": 3,
+        "hotstew": 3,
+        "blazers": 3,
         "bekendheid": 5,
         "dansbaarheid": 5
       }
@@ -158,7 +162,12 @@
         "07o6uabp08au": "up"
       },
       "review": {
-        "genre": "Disco"
+        "genre": "Disco",
+        "matchZang": 5,
+        "hotstew": 5,
+        "blazers": 4,
+        "bekendheid": 5,
+        "dansbaarheid": 5
       }
     },
     {
@@ -206,6 +215,13 @@
         "rohexrj01o73": "down",
         "7o1q1w3ymb2t": "down",
         "07o6uabp08au": "down"
+      },
+      "review": {
+        "matchZang": 5,
+        "hotstew": 2,
+        "blazers": 1,
+        "bekendheid": 3,
+        "dansbaarheid": 1
       }
     },
     {
@@ -233,8 +249,10 @@
       },
       "review": {
         "genre": "Pop",
-        "matchZang": 2,
+        "categorie": "Modern",
+        "matchZang": 4,
         "hotstew": 5,
+        "blazers": 5,
         "bekendheid": 5,
         "dansbaarheid": 5
       }
@@ -281,6 +299,9 @@
         "gkz7x18arhjd": "up",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "matchZang": 2
       }
     },
     {
@@ -305,6 +326,11 @@
         "rohexrj01o73": "down",
         "7o1q1w3ymb2t": "up",
         "h8pe07xyc6y2": "up"
+      },
+      "review": {
+        "genre": "Pop",
+        "categorie": "Modern",
+        "matchZang": 2
       }
     },
     {
@@ -329,7 +355,12 @@
         "rohexrj01o73": "up"
       },
       "review": {
-        "genre": "Pop"
+        "genre": "Pop",
+        "matchZang": 4,
+        "hotstew": 5,
+        "blazers": 5,
+        "bekendheid": 5,
+        "dansbaarheid": 5
       }
     },
     {
@@ -373,6 +404,9 @@
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "matchZang": 2
       }
     },
     {
@@ -397,6 +431,13 @@
         "gkz7x18arhjd": "down",
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "down"
+      },
+      "review": {
+        "matchZang": 3,
+        "hotstew": 4,
+        "blazers": 5,
+        "bekendheid": 5,
+        "dansbaarheid": 5
       }
     },
     {
@@ -543,6 +584,13 @@
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "up",
         "07o6uabp08au": "up"
+      },
+      "review": {
+        "matchZang": 4,
+        "hotstew": 4,
+        "blazers": 4,
+        "bekendheid": 5,
+        "dansbaarheid": 5
       }
     },
     {
@@ -655,6 +703,14 @@
         "rohexrj01o73": "up",
         "7o1q1w3ymb2t": "up",
         "07o6uabp08au": "up"
+      },
+      "review": {
+        "genre": "Pop",
+        "matchZang": 3,
+        "hotstew": 4,
+        "blazers": 3,
+        "bekendheid": 3,
+        "dansbaarheid": 1
       }
     },
     {
@@ -842,7 +898,12 @@
         "7o1q1w3ymb2t": "down"
       },
       "review": {
-        "genre": "Funk"
+        "genre": "Funk",
+        "matchZang": 4,
+        "hotstew": 5,
+        "blazers": 5,
+        "bekendheid": 4,
+        "dansbaarheid": 5
       }
     }
   ],
