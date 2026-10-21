@@ -11,6 +11,22 @@
   },
   "songs": [
     {
+      "id": 1792597270520,
+      "title": "Brass in Pocket",
+      "artist": "the Pretenders",
+      "links": [
+        "https://www.youtube.com/watch?v=0H6re3PCP3E&list=RD0H6re3PCP3E&start_radio=1"
+      ],
+      "suggesterComment": "lekker nummer\nzangeres\ngroovy beetje rock",
+      "suggesterUid": "djt8okvxuzhe",
+      "suggesterName": "Frankbanjo",
+      "thumbnailUrl": "https://img.youtube.com/vi/0H6re3PCP3E/mqdefault.jpg",
+      "upvotes": 0,
+      "downvotes": 0,
+      "comments": [],
+      "votes": {}
+    },
+    {
       "id": 1790872453939,
       "title": "Teardrops",
       "artist": "Womack&womack, uitvoering met blazers",
